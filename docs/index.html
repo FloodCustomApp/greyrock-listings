@@ -359,6 +359,89 @@
     opacity: 0.3;
   }
 
+  /* ─── IMAGE GALLERY ─── */
+  .card-gallery {
+    position: relative;
+    width: 100%;
+    min-height: 200px;
+    overflow: hidden;
+    background: var(--bg-secondary);
+  }
+
+  .card-gallery img {
+    width: 100%;
+    height: 100%;
+    min-height: 200px;
+    object-fit: cover;
+    display: none;
+  }
+
+  .card-gallery img.active {
+    display: block;
+  }
+
+  .gallery-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.55);
+    color: #fff;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity var(--transition);
+    z-index: 2;
+  }
+
+  .card-gallery:hover .gallery-nav {
+    opacity: 1;
+  }
+
+  .gallery-nav.prev { left: 8px; }
+  .gallery-nav.next { right: 8px; }
+  .gallery-nav:hover { background: rgba(0,0,0,0.75); }
+
+  .gallery-dots {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 5px;
+    z-index: 2;
+  }
+
+  .gallery-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.4);
+    transition: background var(--transition);
+  }
+
+  .gallery-dot.active {
+    background: #fff;
+  }
+
+  .gallery-count {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(0,0,0,0.6);
+    color: #fff;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    z-index: 2;
+  }
+
   .card-body {
     padding: 20px 24px;
     display: flex;
@@ -510,7 +593,7 @@
     .filter-actions { width: 100%; padding-top: 8px; }
     .filter-actions .btn-filter { flex: 1; text-align: center; }
     .property-card { grid-template-columns: 1fr; }
-    .card-image, .card-image-placeholder { min-height: 180px; max-height: 200px; }
+    .card-image, .card-image-placeholder, .card-gallery, .card-gallery img { min-height: 180px; max-height: 200px; }
   }
 
   /* ─── ANIMATIONS ─── */
@@ -771,7 +854,15 @@ function renderCards(listings) {
     const perSF = (l.rent && l.sqft) ? `$${(l.rent / l.sqft * 12).toFixed(2)}` : '—';
     const sqftDisplay = l.sqft ? l.sqft.toLocaleString() : '—';
     const imageHTML = l.imageUrl 
-      ? `<img class="card-image" src="${l.imageUrl}" alt="${l.title}" loading="lazy">`
+      ? (l.imageUrls && l.imageUrls.length > 1
+        ? `<div class="card-gallery" data-index="0">
+             ${l.imageUrls.map((url, i) => `<img src="${url}" alt="${l.title}" loading="lazy" class="${i === 0 ? 'active' : ''}">`).join('')}
+             <button class="gallery-nav prev" onclick="event.stopPropagation(); galleryNav(this, -1)">‹</button>
+             <button class="gallery-nav next" onclick="event.stopPropagation(); galleryNav(this, 1)">›</button>
+             <div class="gallery-dots">${l.imageUrls.map((_, i) => `<span class="gallery-dot${i === 0 ? ' active' : ''}"></span>`).join('')}</div>
+             <span class="gallery-count">1/${l.imageUrls.length}</span>
+           </div>`
+        : `<img class="card-image" src="${l.imageUrl}" alt="${l.title}" loading="lazy">`)
       : `<div class="card-image-placeholder">
            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
              <rect x="3" y="3" width="18" height="18" rx="2"/>
@@ -847,6 +938,20 @@ function renderMarkers(listings) {
   if (bounds.length > 0) {
     map.fitBounds(bounds, { padding: [40, 40], maxZoom: 12 });
   }
+}
+
+function galleryNav(btn, direction) {
+  const gallery = btn.closest('.card-gallery');
+  const imgs = gallery.querySelectorAll('img');
+  const dots = gallery.querySelectorAll('.gallery-dot');
+  const countEl = gallery.querySelector('.gallery-count');
+  let idx = parseInt(gallery.dataset.index || 0) + direction;
+  if (idx < 0) idx = imgs.length - 1;
+  if (idx >= imgs.length) idx = 0;
+  gallery.dataset.index = idx;
+  imgs.forEach((img, i) => img.classList.toggle('active', i === idx));
+  dots.forEach((dot, i) => dot.classList.toggle('active', i === idx));
+  if (countEl) countEl.textContent = `${idx + 1}/${imgs.length}`;
 }
 
 function highlightProperty(id) {

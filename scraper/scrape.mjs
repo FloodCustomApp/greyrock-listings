@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 /**
- * GreyRock CRE — AppFolio Listings Scraper
+ * GreyRock CRE — AppFolio Listings Scraper v2.0
  * 
- * Fetches the public AppFolio listings page, parses HTML into structured JSON,
- * validates the results, and writes listings.json with health metadata.
+ * Fetches the public AppFolio listings index page, then visits each listing's
+ * detail page to extract real gallery images, full descriptions, and accurate
+ * property data.
  * 
  * Exit codes:
  *   0 = success
@@ -18,12 +19,19 @@ import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 // ─── CONFIG ────────────────────────────────────────────────────────────────────
-const APPFOLIO_URL = process.env.APPFOLIO_URL || 'https://greyrockcommercial.appfolio.com/listings';
+const BASE_URL = 'https://greyrockcommercial.appfolio.com';
+const APPFOLIO_URL = process.env.APPFOLIO_URL || `${BASE_URL}/listings`;
 const OUTPUT_DIR = process.env.OUTPUT_DIR || resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const OUTPUT_FILE = resolve(OUTPUT_DIR, 'docs', 'listings.json');
-const NOTIFY_EMAIL = process.env.NOTIFY_EMAIL || '';
 const MAX_RETRIES = 3;
 const RETRY_DELAY_MS = 5000;
+const DETAIL_FETCH_DELAY_MS = 1500; // polite delay between detail page fetches
+
+const HEADERS = {
+  'User-Agent': 'GreyRockCRE-ListingSync/2.0 (+https://greyrockcre.com)',
+  'Accept': 'text/html,application/xhtml+xml',
+  'Accept-Language': 'en-US,en;q=0.9',
+};
 
 // ─── HELPERS ───────────────────────────────────────────────────────────────────
 
@@ -41,25 +49,17 @@ async function sleep(ms) {
 async function fetchWithRetry(url, retries = MAX_RETRIES) {
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
-      log('info', `Fetching AppFolio listings (attempt ${attempt}/${retries})`, { url });
-      
+      log('info', `Fetching (attempt ${attempt}/${retries})`, { url });
       const response = await fetch(url, {
-        headers: {
-          'User-Agent': 'GreyRockCRE-ListingSync/1.0 (+https://greyrockcre.com)',
-          'Accept': 'text/html,application/xhtml+xml',
-          'Accept-Language': 'en-US,en;q=0.9',
-        },
-        signal: AbortSignal.timeout(30000), // 30s timeout
+        headers: HEADERS,
+        signal: AbortSignal.timeout(30000),
       });
-
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
-
       const html = await response.text();
-      log('info', `Fetched ${html.length} bytes of HTML`);
+      log('info', `Fetched ${html.length} bytes`);
       return html;
-      
     } catch (err) {
       log('warn', `Fetch attempt ${attempt} failed: ${err.message}`);
       if (attempt < retries) {
@@ -71,198 +71,147 @@ async function fetchWithRetry(url, retries = MAX_RETRIES) {
   }
 }
 
-// ─── PARSER ────────────────────────────────────────────────────────────────────
+// ─── INDEX PAGE PARSER ─────────────────────────────────────────────────────────
 
-function parseListings(html) {
+function parseIndexPage(html) {
   const dom = new JSDOM(html);
   const doc = dom.window.document;
 
-  // AppFolio uses .listing-item or similar card containers
-  // We look for links to /listings/detail/ which each listing has
-  const listings = [];
-  
-  // Strategy 1: Find all detail links and work backwards to their parent cards
+  // Find all detail links → extract unique listing UUIDs
   const detailLinks = doc.querySelectorAll('a[href*="/listings/detail/"]');
-  
+
   if (detailLinks.length === 0) {
-    // Strategy 2: Check if the page says "no vacancies"
-    const noVacancies = doc.body.textContent.includes('no available properties') || 
+    const noVacancies = doc.body.textContent.includes('no available properties') ||
                         doc.body.textContent.includes('No vacancies found') ||
                         doc.body.textContent.includes('no vacancies');
-    
     if (noVacancies) {
       log('info', 'AppFolio reports no current vacancies');
-      return { listings: [], noVacancies: true };
+      return { uuids: [], noVacancies: true };
     }
-    
-    // If we found neither listings nor a "no vacancies" message, the structure changed
     throw new Error('STRUCTURE_CHANGED: Could not find listing detail links or vacancy status');
   }
 
-  // Collect unique listing UUIDs (each listing has multiple links to same detail page)
-  const seenUUIDs = new Set();
-  
-  detailLinks.forEach(link => {
-    const href = link.getAttribute('href');
-    const uuidMatch = href.match(/\/listings\/detail\/([a-f0-9-]+)/);
-    if (!uuidMatch) return;
-    
-    const uuid = uuidMatch[1];
-    if (seenUUIDs.has(uuid)) return;
-    seenUUIDs.add(uuid);
+  const uuids = [...new Set(
+    [...detailLinks]
+      .map(link => link.getAttribute('href')?.match(/\/listings\/detail\/([a-f0-9-]+)/)?.[1])
+      .filter(Boolean)
+  )];
 
-    // Walk up to find the listing card container
-    // AppFolio wraps each listing in a container (usually a div or li)
-    let card = link.closest('.listing-item') || 
-               link.closest('[class*="listing"]') ||
-               link.closest('li') ||
-               findCardContainer(link);
-
-    if (!card) {
-      log('warn', `Could not find card container for listing ${uuid}`);
-      return;
-    }
-
-    const listing = extractListingData(card, uuid);
-    if (listing) {
-      listings.push(listing);
-    }
-  });
-
-  log('info', `Parsed ${listings.length} listings from ${seenUUIDs.size} unique UUIDs`);
-  return { listings, noVacancies: false };
+  log('info', `Found ${uuids.length} unique listing UUIDs on index page`);
+  return { uuids, noVacancies: false };
 }
 
-function findCardContainer(element) {
-  // Walk up the DOM tree looking for a reasonable container
-  let current = element.parentElement;
-  let depth = 0;
-  while (current && depth < 10) {
-    // A card container typically has multiple children including text, links, etc.
-    const childCount = current.children.length;
-    const hasMultipleLinks = current.querySelectorAll('a').length >= 2;
-    const hasText = current.textContent.trim().length > 50;
-    
-    if (childCount >= 3 && hasMultipleLinks && hasText) {
-      return current;
+// ─── DETAIL PAGE PARSER ────────────────────────────────────────────────────────
+
+function parseDetailPage(html, uuid) {
+  const dom = new JSDOM(html);
+  const doc = dom.window.document;
+  const text = doc.body?.textContent || '';
+
+  // ── IMAGES ──
+  // Gallery images: .gallery img, .swipebox img
+  // Filter out AppFolio logo (large.png) and placeholders, deduplicate
+  const allImgs = doc.querySelectorAll('.gallery img, .swipebox img, img[class*="gallery"]');
+  const imageUrls = [...new Set(
+    [...allImgs]
+      .map(img => img.getAttribute('src') || img.getAttribute('data-src'))
+      .filter(src => src && !src.includes('large.png') && !src.includes('place_holder'))
+  )];
+
+  // Fallback: any CDN images on the page
+  if (imageUrls.length === 0) {
+    const fallbackImgs = doc.querySelectorAll('img');
+    for (const img of fallbackImgs) {
+      const src = img.getAttribute('src') || img.getAttribute('data-src');
+      if (src && src.includes('images.cdn.appfolio.com') && !src.includes('large.png')) {
+        if (!imageUrls.includes(src)) imageUrls.push(src);
+      }
     }
-    current = current.parentElement;
-    depth++;
   }
-  return null;
-}
 
-function extractListingData(card, uuid) {
-  const text = card.textContent;
-  
-  // Extract rent/price
-  const rentMatch = text.match(/\$[\d,]+(?:\.\d{2})?/);
-  const rent = rentMatch ? parseFloat(rentMatch[0].replace(/[$,]/g, '')) : null;
-
-  // Extract square footage
-  const sqftMatch = text.match(/([\d,]+)\s*(?:SF|sq\s*ft|square\s*feet)/i);
-  const sqft = sqftMatch ? parseInt(sqftMatch[1].replace(/,/g, '')) : null;
-
-  // Extract address — look for the address pattern (street, city, state ZIP)
-  const addressMatch = text.match(/(\d+\s+[A-Za-z0-9\s.,#-]+,\s*[A-Za-z\s]+,\s*[A-Z]{2}\s*\d{5})/);
-  const address = addressMatch ? addressMatch[1].trim() : null;
-
-  // Extract title — usually in an h2 or h3 within the card, or a bold link
+  // ── TITLE ──
   let title = null;
-  const headings = card.querySelectorAll('h1, h2, h3, h4, h5');
+  const headings = doc.querySelectorAll('h1, h2, h3');
   for (const h of headings) {
     const hText = h.textContent.trim();
-    if (hText.length > 3 && hText.length < 200) {
+    if (hText.length > 5 && hText.length < 300 && !hText.match(/^(Current|Rental|Apply)/i)) {
       title = hText;
       break;
     }
   }
-  // Fallback: use the first detail link text if it's descriptive
   if (!title) {
-    const detailLink = card.querySelector('a[href*="/listings/detail/"]');
-    if (detailLink) {
-      const linkText = detailLink.textContent.trim();
-      if (linkText.length > 5 && !linkText.match(/^(View|Apply|Map|Details)/i)) {
-        title = linkText;
+    title = doc.querySelector('title')?.textContent?.trim() || `Listing ${uuid.slice(0, 8)}`;
+  }
+
+  // ── ADDRESS ──
+  const addressMatch = text.match(/(\d+\s+[A-Za-z0-9\s.,#-]+,\s*[A-Za-z\s]+,\s*[A-Z]{2}\s*\d{5})/);
+  const address = addressMatch ? addressMatch[1].trim() : null;
+
+  // ── DESCRIPTION ──
+  let description = '';
+  const descEl = doc.querySelector('.listing-detail__description, [class*="listing-detail__description"], .js-listing-description');
+  if (descEl) {
+    description = descEl.textContent.trim();
+  }
+  if (!description) {
+    const paragraphs = doc.querySelectorAll('p');
+    let longest = '';
+    for (const p of paragraphs) {
+      const pText = p.textContent.trim();
+      if (pText.length > longest.length && !pText.includes('Privacy Policy')) {
+        longest = pText;
       }
     }
-  }
-  // Final fallback: use address as title
-  if (!title) title = address || `Listing ${uuid.slice(0, 8)}`;
-
-  // Extract description
-  let description = '';
-  const paragraphs = card.querySelectorAll('p, .description, [class*="desc"]');
-  for (const p of paragraphs) {
-    const pText = p.textContent.trim();
-    if (pText.length > 30 && !pText.includes('Privacy Policy')) {
-      description = pText;
-      break;
-    }
-  }
-  // Fallback: grab longest text block that isn't the title or address
-  if (!description) {
-    const allText = card.textContent.replace(/\s+/g, ' ').trim();
-    // Find descriptive text (longer than address, not just numbers)
-    const descMatch = allText.match(/[A-Z][a-z].{50,500}/);
-    if (descMatch) {
-      description = descMatch[0].trim();
-      if (description.length > 300) description = description.slice(0, 297) + '...';
-    }
+    description = longest;
   }
 
-  // Extract availability
+  // ── RENT ──
+  const rentMatch = text.match(/(?:RENT|Rent)\s*\$?([\d,]+(?:\.\d{2})?)/);
+  const rent = rentMatch ? parseFloat(rentMatch[1].replace(/,/g, '')) : null;
+
+  // ── SQUARE FEET ──
+  const sqftMatch = text.match(/(?:SQUARE FEET|Square Feet|Sq\.?\s*Ft\.?)\s*([\d,]+)/i) ||
+                    text.match(/([\d,]+)\s*(?:SF|sq\s*ft|square\s*feet)/i);
+  const sqft = sqftMatch ? parseInt(sqftMatch[1].replace(/,/g, '')) : null;
+
+  // ── RENT PER SF ──
+  const rentSFMatch = text.match(/(?:RENT\s*\/\s*SF|Rent\s*\/\s*SF)\s*\$?([\d,.]+)\s*\/yr/i) ||
+                      text.match(/\$([\d,.]+)\s*\/(?:yr|sf)/i);
+  const rentPerSF = rentSFMatch ? parseFloat(rentSFMatch[1].replace(/,/g, '')) : null;
+
+  // ── AVAILABILITY ──
   let available = 'Contact for availability';
-  if (/available\s*now/i.test(text)) {
-    available = 'Now';
-  } else {
-    const dateMatch = text.match(/available\s+(\w+\s+\d{1,2},?\s*\d{4}|\w+\s+\d{4})/i);
-    if (dateMatch) available = dateMatch[1];
+  const availMatch = text.match(/(?:AVAILABLE|Available)\s+(\d{1,2}\/\d{1,2}\/\d{2,4})/i) ||
+                     text.match(/(?:AVAILABLE|Available)\s+(Now)/i) ||
+                     text.match(/(?:AVAILABLE|Available)\s+(\w+\s+\d{1,2},?\s*\d{4})/i);
+  if (availMatch) {
+    available = availMatch[1].trim();
   }
 
-  // Extract lease type or commercial type
+  // ── COMMERCIAL TYPE & LEASE TYPE ──
   let propertyType = 'Commercial';
-  const typePatterns = [
-    { pattern: /commercial\s*type:\s*(\w+)/i, group: 1 },
-    { pattern: /lease\s*type:\s*([A-Za-z\s]+?)(?:\s*Available|\s*$)/i, group: 1 },
-    { pattern: /\b(office|retail|industrial|warehouse|mixed[- ]use|medical|flex)\b/i, group: 1 },
-  ];
-  for (const { pattern, group } of typePatterns) {
-    const match = text.match(pattern);
-    if (match) {
-      propertyType = match[group].trim();
-      // Capitalize first letter
-      propertyType = propertyType.charAt(0).toUpperCase() + propertyType.slice(1);
-      break;
-    }
-  }
+  const typeMatch = text.match(/Commercial\s*Type:\s*(\w+)/i);
+  if (typeMatch) propertyType = typeMatch[1].trim();
 
-  // Extract rent per SF
-  const rentSFMatch = text.match(/\$([\d.]+)\s*\/(?:yr|mo|sf)/i);
-  const rentPerSF = rentSFMatch ? parseFloat(rentSFMatch[1]) : 
-                    (rent && sqft ? parseFloat((rent / sqft * 12).toFixed(2)) : null);
+  let leaseType = null;
+  const leaseMatch = text.match(/Lease\s*Type:\s*(\w+)/i);
+  if (leaseMatch) leaseType = leaseMatch[1].trim();
 
-  // Extract image URL
-  let imageUrl = null;
-  const img = card.querySelector('img');
-  if (img) {
-    const src = img.getAttribute('src') || img.getAttribute('data-src');
-    // Skip placeholder images
-    if (src && !src.includes('place_holder')) {
-      imageUrl = src;
-    }
-  }
+  // ── UTILITIES ──
+  let utilities = null;
+  const utilMatch = text.match(/Utilities\s*Included:\s*([^\n]+)/i);
+  if (utilMatch) utilities = utilMatch[1].trim();
 
-  // Build the apply URL
-  const applyUrl = `https://greyrockcommercial.appfolio.com/listings/rental_applications/new?listable_uid=${uuid}&source=Website`;
-  const detailUrl = `https://greyrockcommercial.appfolio.com/listings/detail/${uuid}`;
-
-  // Extract city from address
+  // ── CITY ──
   let city = null;
   if (address) {
     const cityMatch = address.match(/,\s*([A-Za-z\s]+),\s*[A-Z]{2}/);
     if (cityMatch) city = cityMatch[1].trim();
   }
+
+  // ── URLS ──
+  const detailUrl = `${BASE_URL}/listings/detail/${uuid}`;
+  const applyUrl = `${BASE_URL}/listings/rental_applications/new?listable_uid=${uuid}&source=Website`;
 
   return {
     id: uuid,
@@ -270,21 +219,24 @@ function extractListingData(card, uuid) {
     address,
     city,
     type: propertyType,
+    leaseType,
     rent,
     sqft,
     rentPerSF,
     description,
     available,
-    status: available === 'Now' ? 'available' : 'coming-soon',
-    imageUrl,
+    status: /now/i.test(available) ? 'available' : 'coming-soon',
+    utilities,
+    imageUrl: imageUrls[0] || null,    // primary image for card display
+    imageUrls: imageUrls,               // all gallery images
     detailUrl,
     applyUrl,
   };
 }
 
-// ─── CITY GEOCODING (offline lookup for Charlotte metro) ───────────────────────
+// ─── CITY GEOCODING (offline lookup for NC markets) ────────────────────────────
 
-const CHARLOTTE_METRO_COORDS = {
+const NC_METRO_COORDS = {
   'charlotte': { lat: 35.2271, lng: -80.8431 },
   'concord': { lat: 35.4088, lng: -80.5795 },
   'gastonia': { lat: 35.2621, lng: -81.1873 },
@@ -301,13 +253,17 @@ const CHARLOTTE_METRO_COORDS = {
   'rock hill': { lat: 34.9249, lng: -81.0251 },
   'fort mill': { lat: 35.0074, lng: -80.9451 },
   'columbia': { lat: 34.0007, lng: -81.0348 },
+  'rockwell': { lat: 35.5513, lng: -80.4024 },
+  'salisbury': { lat: 35.6710, lng: -80.4742 },
+  'china grove': { lat: 35.5699, lng: -80.5818 },
+  'landis': { lat: 35.5463, lng: -80.6107 },
   'default': { lat: 35.32, lng: -80.85 },
 };
 
 function geocodeCity(city) {
-  if (!city) return CHARLOTTE_METRO_COORDS['default'];
+  if (!city) return NC_METRO_COORDS['default'];
   const key = city.toLowerCase().trim();
-  return CHARLOTTE_METRO_COORDS[key] || CHARLOTTE_METRO_COORDS['default'];
+  return NC_METRO_COORDS[key] || NC_METRO_COORDS['default'];
 }
 
 // ─── VALIDATION ────────────────────────────────────────────────────────────────
@@ -316,22 +272,15 @@ function validateListings(listings) {
   const errors = [];
   const warnings = [];
 
-  // Check minimum expected fields on each listing
   for (const listing of listings) {
-    if (!listing.address) {
-      warnings.push(`Listing ${listing.id}: missing address`);
-    }
-    if (!listing.rent && listing.rent !== 0) {
-      warnings.push(`Listing ${listing.id}: missing rent`);
-    }
-    if (!listing.sqft) {
-      warnings.push(`Listing ${listing.id}: missing sqft`);
-    }
+    if (!listing.address) warnings.push(`Listing ${listing.id}: missing address`);
+    if (!listing.rent && listing.rent !== 0) warnings.push(`Listing ${listing.id}: missing rent`);
+    if (!listing.sqft) warnings.push(`Listing ${listing.id}: missing sqft`);
+    if (!listing.imageUrl) warnings.push(`Listing ${listing.id}: no images found`);
   }
 
-  // Sanity checks
   if (listings.length > 200) {
-    errors.push(`Unexpectedly high listing count: ${listings.length}. Possible parse error.`);
+    errors.push(`Unexpectedly high listing count: ${listings.length}`);
   }
 
   for (const listing of listings) {
@@ -350,24 +299,74 @@ function validateListings(listings) {
 
 async function main() {
   const startTime = Date.now();
-  
+
   try {
-    // 1. Fetch the page
-    const html = await fetchWithRetry(APPFOLIO_URL);
+    // 1. Fetch the index page
+    const indexHtml = await fetchWithRetry(APPFOLIO_URL);
 
-    // 2. Parse listings
-    const { listings, noVacancies } = parseListings(html);
+    // 2. Parse listing UUIDs from index page
+    const { uuids, noVacancies } = parseIndexPage(indexHtml);
 
-    // 3. Add geocoding for map display
-    for (const listing of listings) {
-      const coords = geocodeCity(listing.city);
-      listing.lat = coords.lat + (Math.random() - 0.5) * 0.01; // slight jitter so pins don't stack
-      listing.lng = coords.lng + (Math.random() - 0.5) * 0.01;
+    if (noVacancies || uuids.length === 0) {
+      const output = {
+        meta: {
+          lastUpdated: new Date().toISOString(),
+          source: APPFOLIO_URL,
+          listingCount: 0,
+          noVacancies: true,
+          hasChanges: false,
+          scrapeDurationMs: Date.now() - startTime,
+          warnings: [],
+          version: '2.0.0',
+        },
+        listings: [],
+      };
+      writeFileSync(OUTPUT_FILE, JSON.stringify(output, null, 2), 'utf-8');
+      log('info', 'No vacancies — wrote empty listings.json');
+      return;
     }
 
-    // 4. Validate
+    // 3. Fetch each detail page and extract full data
+    const listings = [];
+    for (let i = 0; i < uuids.length; i++) {
+      const uuid = uuids[i];
+      const detailUrl = `${BASE_URL}/listings/detail/${uuid}`;
+
+      try {
+        log('info', `Fetching detail page ${i + 1}/${uuids.length}`, { uuid });
+        const detailHtml = await fetchWithRetry(detailUrl);
+        const listing = parseDetailPage(detailHtml, uuid);
+        listings.push(listing);
+        log('info', `Parsed listing: ${listing.title}`, {
+          images: listing.imageUrls.length,
+          sqft: listing.sqft,
+          rent: listing.rent,
+        });
+      } catch (err) {
+        log('warn', `Failed to fetch detail page for ${uuid}: ${err.message}`);
+        // Continue with other listings
+      }
+
+      // Polite delay between requests
+      if (i < uuids.length - 1) {
+        await sleep(DETAIL_FETCH_DELAY_MS);
+      }
+    }
+
+    if (listings.length === 0) {
+      throw new Error('No listings could be parsed from detail pages');
+    }
+
+    // 4. Add geocoding for map display
+    for (const listing of listings) {
+      const coords = geocodeCity(listing.city);
+      listing.lat = coords.lat + (Math.random() - 0.5) * 0.005;
+      listing.lng = coords.lng + (Math.random() - 0.5) * 0.005;
+    }
+
+    // 5. Validate
     const validation = validateListings(listings);
-    
+
     if (!validation.valid) {
       log('error', 'Validation failed', { errors: validation.errors });
       process.exit(3);
@@ -377,7 +376,7 @@ async function main() {
       log('warn', 'Validation warnings', { warnings: validation.warnings });
     }
 
-    // 5. Load previous data for comparison
+    // 6. Load previous data for comparison
     let previousCount = null;
     let previousHash = null;
     if (existsSync(OUTPUT_FILE)) {
@@ -390,57 +389,59 @@ async function main() {
       }
     }
 
-    // 6. Simple content hash to detect changes
+    // 7. Content hash for change detection
     const contentHash = simpleHash(JSON.stringify(listings));
     const hasChanges = contentHash !== previousHash;
 
-    // 7. Build output
+    // 8. Build output
     const output = {
       meta: {
         lastUpdated: new Date().toISOString(),
         source: APPFOLIO_URL,
         listingCount: listings.length,
-        noVacancies,
+        noVacancies: false,
         previousCount,
         hasChanges,
         contentHash,
         scrapeDurationMs: Date.now() - startTime,
         warnings: validation.warnings,
-        version: '1.0.0',
+        version: '2.0.0',
       },
       listings,
     };
 
-    // 8. Write output
+    // 9. Write output
     writeFileSync(OUTPUT_FILE, JSON.stringify(output, null, 2), 'utf-8');
     log('info', 'Successfully wrote listings.json', {
       count: listings.length,
       hasChanges,
+      totalImages: listings.reduce((sum, l) => sum + l.imageUrls.length, 0),
       file: OUTPUT_FILE,
     });
 
-    // 9. Summary for GitHub Actions
+    // 10. GitHub Actions summary
     if (process.env.GITHUB_STEP_SUMMARY) {
+      const totalImages = listings.reduce((sum, l) => sum + l.imageUrls.length, 0);
       const summary = [
-        `## 📋 Scrape Results`,
+        `## 📋 Scrape Results (v2.0)`,
         `| Metric | Value |`,
         `| --- | --- |`,
         `| Listings Found | ${listings.length} |`,
+        `| Total Images | ${totalImages} |`,
         `| Previous Count | ${previousCount ?? 'N/A'} |`,
         `| Changes Detected | ${hasChanges ? '✅ Yes' : '➖ No'} |`,
         `| Duration | ${Date.now() - startTime}ms |`,
         `| Warnings | ${validation.warnings.length} |`,
-        noVacancies ? `\n> ℹ️ AppFolio reports no current vacancies` : '',
+        '',
+        ...listings.map(l => `### ${l.title}\n- 📍 ${l.address || 'No address'}\n- 💰 $${l.rent?.toLocaleString() || '?'}/mo | ${l.sqft?.toLocaleString() || '?'} SF\n- 🖼️ ${l.imageUrls.length} images`),
         validation.warnings.length > 0 ? `\n### ⚠️ Warnings\n${validation.warnings.map(w => `- ${w}`).join('\n')}` : '',
       ].join('\n');
-      
       writeFileSync(process.env.GITHUB_STEP_SUMMARY, summary, { flag: 'a' });
     }
 
   } catch (err) {
     log('error', `Scraper failed: ${err.message}`, { stack: err.stack });
-    
-    // Write error summary for GitHub Actions
+
     if (process.env.GITHUB_STEP_SUMMARY) {
       const summary = [
         `## ❌ Scrape Failed`,
@@ -453,7 +454,6 @@ async function main() {
       writeFileSync(process.env.GITHUB_STEP_SUMMARY, summary, { flag: 'a' });
     }
 
-    // Determine exit code
     if (err.message.includes('STRUCTURE_CHANGED')) {
       process.exit(2);
     } else {
