@@ -1,13 +1,34 @@
 {
   "meta": {
-    "lastUpdated": "2026-02-17T00:00:00.000Z",
-    "source": "sample-data",
-    "listingCount": 0,
+    "lastUpdated": "2026-02-19T20:24:13.161Z",
+    "source": "https://greyrockcommercial.appfolio.com/listings",
+    "listingCount": 1,
     "noVacancies": false,
+    "previousCount": 0,
     "hasChanges": true,
-    "contentHash": "initial",
-    "version": "1.0.0",
-    "note": "This is placeholder data. It will be replaced by the first scraper run."
+    "contentHash": "ref97s",
+    "scrapeDurationMs": 576,
+    "warnings": [],
+    "version": "1.0.0"
   },
-  "listings": []
+  "listings": [
+    {
+      "id": "dc774453-9cf9-40d5-843f-2ac211f04f15",
+      "title": "Coming Soon — Prime Retail Opportunity in Downtown Rockwell",
+      "address": "206 E. Main St. - 206 E Main St., Rockwell, NC 28138",
+      "city": "Rockwell",
+      "type": "Retail",
+      "rent": 2400,
+      "sqft": 2400,
+      "rentPerSF": 9,
+      "description": "206 E. Main St. - 206 E Main St., Rockwell, NC 28138\n         Map",
+      "available": "Contact for availability",
+      "status": "coming-soon",
+      "imageUrl": null,
+      "detailUrl": "https://greyrockcommercial.appfolio.com/listings/detail/dc774453-9cf9-40d5-843f-2ac211f04f15",
+      "applyUrl": "https://greyrockcommercial.appfolio.com/listings/rental_applications/new?listable_uid=dc774453-9cf9-40d5-843f-2ac211f04f15&source=Website",
+      "lat": 35.32379987558627,
+      "lng": -80.85112479830133
+    }
+  ]
 }
