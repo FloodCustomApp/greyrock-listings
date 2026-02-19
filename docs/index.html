@@ -108,6 +108,69 @@
   }
 
   /* ─── HEADER ─── */
+  /* ─── SEARCH BAR ─── */
+  .search-bar {
+    display: flex;
+    gap: 12px;
+    margin: 16px 0 12px;
+    align-items: center;
+  }
+
+  .search-input {
+    flex: 1;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    padding: 12px 16px 12px 44px;
+    border-radius: var(--radius-lg);
+    font-family: inherit;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color var(--transition);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: 14px center;
+  }
+
+  .search-input::placeholder { color: var(--text-muted); }
+  .search-input:focus { border-color: var(--accent); }
+
+  .mobile-filter-btn {
+    display: none;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 18px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    border-radius: var(--radius-lg);
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: border-color var(--transition);
+  }
+
+  .mobile-filter-btn:hover { border-color: var(--accent); }
+
+  .mobile-filter-btn svg { flex-shrink: 0; }
+
+  .filter-badge {
+    background: var(--accent);
+    color: var(--bg-primary);
+    font-size: 0.7rem;
+    font-weight: 700;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .filter-badge.visible { display: flex; }
+
   /* ─── FILTER BAR ─── */
   .filter-bar {
     display: flex;
@@ -117,9 +180,79 @@
     background: var(--bg-secondary);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
-    margin: 16px 0 24px;
+    margin: 0 0 24px;
     align-items: center;
   }
+
+  /* ─── MOBILE FILTER MODAL ─── */
+  .filter-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .filter-overlay.open { display: block; opacity: 1; }
+
+  .filter-modal {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border);
+    border-radius: 16px 16px 0 0;
+    padding: 24px;
+    z-index: 1001;
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+    max-height: 85vh;
+    overflow-y: auto;
+  }
+
+  .filter-overlay.open + .filter-modal,
+  .filter-modal.open { transform: translateY(0); }
+
+  .filter-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .filter-modal-header h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  .filter-modal-close {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 4px 8px;
+    line-height: 1;
+  }
+
+  .filter-modal .filter-group {
+    min-width: 100%;
+    margin-bottom: 16px;
+  }
+
+  .filter-modal-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .filter-modal-actions .btn-filter { flex: 1; text-align: center; }
+  .filter-modal-actions .btn-clear { flex: 0; }
 
   .filter-group {
     display: flex;
@@ -544,10 +677,8 @@
   }
 
   @media (max-width: 768px) {
-    .filter-bar { flex-direction: column; gap: 16px; }
-    .filter-group { min-width: 100%; }
-    .filter-actions { width: 100%; padding-top: 8px; }
-    .filter-actions .btn-filter { flex: 1; text-align: center; }
+    .filter-bar { display: none !important; }
+    .mobile-filter-btn { display: flex; }
     .property-card { grid-template-columns: 1fr; }
     .card-image, .card-image-placeholder, .card-gallery, .card-gallery img { min-height: 180px; max-height: 200px; }
   }
@@ -596,7 +727,17 @@
     <a href="https://www.greyrockcre.com/contact">Contact Our Team</a>
   </div>
 
-  <!-- Filter Bar (hidden until data loads) -->
+  <!-- Search Bar + Mobile Filter Toggle -->
+  <div class="search-bar" id="searchBar" style="display:none;">
+    <input type="text" class="search-input" id="searchInput" placeholder="Search by address, name, or description...">
+    <button class="mobile-filter-btn" id="mobileFilterBtn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/></svg>
+      Filters
+      <span class="filter-badge" id="filterBadge">0</span>
+    </button>
+  </div>
+
+  <!-- Filter Bar — desktop only (hidden on mobile via CSS) -->
   <div class="filter-bar" id="filterBar" style="display:none;">
     <div class="filter-group">
       <label>Property Type</label>
@@ -646,6 +787,60 @@
     <div class="filter-actions">
       <button class="btn-filter" id="applyFilters">Search</button>
       <button class="btn-clear" id="clearFilters">Clear</button>
+    </div>
+  </div>
+
+  <!-- Mobile Filter Modal -->
+  <div class="filter-overlay" id="filterOverlay"></div>
+  <div class="filter-modal" id="filterModal">
+    <div class="filter-modal-header">
+      <h3>Filter Properties</h3>
+      <button class="filter-modal-close" id="filterModalClose">&times;</button>
+    </div>
+    <div class="filter-group">
+      <label>Property Type</label>
+      <select id="mFilterType"><option value="">All Types</option></select>
+    </div>
+    <div class="filter-group">
+      <label>Min Price</label>
+      <select id="mFilterMinPrice">
+        <option value="">No Min</option>
+        <option value="500">$500/mo</option>
+        <option value="1000">$1,000/mo</option>
+        <option value="2000">$2,000/mo</option>
+        <option value="3000">$3,000/mo</option>
+        <option value="5000">$5,000/mo</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Max Price</label>
+      <select id="mFilterMaxPrice">
+        <option value="">No Max</option>
+        <option value="2000">$2,000/mo</option>
+        <option value="3000">$3,000/mo</option>
+        <option value="5000">$5,000/mo</option>
+        <option value="10000">$10,000/mo</option>
+        <option value="20000">$20,000+/mo</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Min Sq Ft</label>
+      <select id="mFilterSqFt">
+        <option value="">Any Size</option>
+        <option value="500">500+ sq ft</option>
+        <option value="1000">1,000+ sq ft</option>
+        <option value="2500">2,500+ sq ft</option>
+        <option value="5000">5,000+ sq ft</option>
+        <option value="10000">10,000+ sq ft</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>City</label>
+      <select id="mFilterCity"><option value="">All Cities</option></select>
+    </div>
+    <div class="filter-modal-actions">
+      <button class="btn-clear" id="mClearFilters">Clear</button>
+      <button class="btn-filter" id="mApplyFilters">Show Results</button>
     </div>
   </div>
 
@@ -725,6 +920,7 @@ function showError() {
 
 function initializeUI() {
   document.getElementById('loadingState').style.display = 'none';
+  document.getElementById('searchBar').style.display = 'flex';
   document.getElementById('filterBar').style.display = 'flex';
   document.getElementById('listingsLayout').style.display = 'grid';
 
@@ -742,22 +938,26 @@ function initializeUI() {
 function populateFilters() {
   // Property types
   const types = [...new Set(LISTINGS.map(l => l.type).filter(Boolean))].sort();
-  const typeSelect = document.getElementById('filterType');
-  types.forEach(t => {
-    const opt = document.createElement('option');
-    opt.value = t;
-    opt.textContent = t;
-    typeSelect.appendChild(opt);
+  ['filterType', 'mFilterType'].forEach(id => {
+    const sel = document.getElementById(id);
+    types.forEach(t => {
+      const opt = document.createElement('option');
+      opt.value = t;
+      opt.textContent = t;
+      sel.appendChild(opt);
+    });
   });
 
   // Cities
   const cities = [...new Set(LISTINGS.map(l => l.city).filter(Boolean))].sort();
-  const citySelect = document.getElementById('filterCity');
-  cities.forEach(c => {
-    const opt = document.createElement('option');
-    opt.value = c;
-    opt.textContent = c;
-    citySelect.appendChild(opt);
+  ['filterCity', 'mFilterCity'].forEach(id => {
+    const sel = document.getElementById(id);
+    cities.forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c;
+      opt.textContent = c;
+      sel.appendChild(opt);
+    });
   });
 }
 
@@ -926,45 +1126,141 @@ function highlightProperty(id) {
   }
 }
 
-// ─── FILTERS ───────────────────────────────────────────────────────────────────
+// ─── FILTERS & SEARCH ─────────────────────────────────────────────────────────
+
+// Determine if we're reading from mobile modal or desktop bar
+function isMobile() {
+  return window.innerWidth <= 768;
+}
+
+function getFilterValues() {
+  const prefix = isMobile() ? 'm' : '';
+  const getId = (base) => prefix ? `${prefix}${base.charAt(0).toUpperCase() + base.slice(1)}` : base;
+  
+  return {
+    type: document.getElementById(isMobile() ? 'mFilterType' : 'filterType').value,
+    minPrice: parseInt(document.getElementById(isMobile() ? 'mFilterMinPrice' : 'filterMinPrice').value) || 0,
+    maxPrice: parseInt(document.getElementById(isMobile() ? 'mFilterMaxPrice' : 'filterMaxPrice').value) || Infinity,
+    minSqft: parseInt(document.getElementById(isMobile() ? 'mFilterSqFt' : 'filterSqFt').value) || 0,
+    city: document.getElementById(isMobile() ? 'mFilterCity' : 'filterCity').value,
+    search: document.getElementById('searchInput').value.trim().toLowerCase()
+  };
+}
+
+function countActiveFilters() {
+  const v = getFilterValues();
+  let count = 0;
+  if (v.type) count++;
+  if (v.minPrice > 0) count++;
+  if (v.maxPrice < Infinity) count++;
+  if (v.minSqft > 0) count++;
+  if (v.city) count++;
+  return count;
+}
+
+function updateFilterBadge() {
+  const count = countActiveFilters();
+  const badge = document.getElementById('filterBadge');
+  badge.textContent = count;
+  badge.classList.toggle('visible', count > 0);
+}
 
 function applyFilters() {
-  const type = document.getElementById('filterType').value;
-  const minPrice = parseInt(document.getElementById('filterMinPrice').value) || 0;
-  const maxPrice = parseInt(document.getElementById('filterMaxPrice').value) || Infinity;
-  const minSqft = parseInt(document.getElementById('filterSqFt').value) || 0;
-  const city = document.getElementById('filterCity').value;
+  const v = getFilterValues();
 
   const filtered = LISTINGS.filter(l => {
-    if (type && l.type !== type) return false;
-    if (l.rent && l.rent < minPrice) return false;
-    if (l.rent && l.rent > maxPrice) return false;
-    if (l.sqft && l.sqft < minSqft) return false;
-    if (city && l.city !== city) return false;
+    if (v.type && l.type !== v.type) return false;
+    if (l.rent && l.rent < v.minPrice) return false;
+    if (l.rent && l.rent > v.maxPrice) return false;
+    if (l.sqft && l.sqft < v.minSqft) return false;
+    if (v.city && l.city !== v.city) return false;
+    if (v.search) {
+      const hay = [l.title, l.address, l.city, l.type, l.description].filter(Boolean).join(' ').toLowerCase();
+      if (!hay.includes(v.search)) return false;
+    }
     return true;
   });
 
   activeCardId = null;
   renderCards(filtered);
   renderMarkers(filtered);
+  updateFilterBadge();
 }
 
 function clearFilters() {
-  document.getElementById('filterType').value = '';
-  document.getElementById('filterMinPrice').value = '';
-  document.getElementById('filterMaxPrice').value = '';
-  document.getElementById('filterSqFt').value = '';
-  document.getElementById('filterCity').value = '';
+  // Clear both desktop and mobile
+  ['filterType','filterMinPrice','filterMaxPrice','filterSqFt','filterCity',
+   'mFilterType','mFilterMinPrice','mFilterMaxPrice','mFilterSqFt','mFilterCity'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('searchInput').value = '';
   activeCardId = null;
   renderCards(LISTINGS);
   renderMarkers(LISTINGS);
+  updateFilterBadge();
+}
+
+// Sync desktop → mobile and vice versa
+function syncFilters(fromMobile) {
+  const pairs = [
+    ['filterType', 'mFilterType'],
+    ['filterMinPrice', 'mFilterMinPrice'],
+    ['filterMaxPrice', 'mFilterMaxPrice'],
+    ['filterSqFt', 'mFilterSqFt'],
+    ['filterCity', 'mFilterCity']
+  ];
+  pairs.forEach(([desktop, mobile]) => {
+    if (fromMobile) {
+      document.getElementById(desktop).value = document.getElementById(mobile).value;
+    } else {
+      document.getElementById(mobile).value = document.getElementById(desktop).value;
+    }
+  });
+}
+
+// ─── MOBILE FILTER MODAL ──────────────────────────────────────────────────────
+
+function openFilterModal() {
+  syncFilters(false); // desktop → mobile
+  document.getElementById('filterOverlay').classList.add('open');
+  document.getElementById('filterModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeFilterModal() {
+  document.getElementById('filterOverlay').classList.remove('open');
+  document.getElementById('filterModal').classList.remove('open');
+  document.body.style.overflow = '';
 }
 
 // ─── EVENT LISTENERS ───────────────────────────────────────────────────────────
+
+// Desktop filters
 document.getElementById('applyFilters').addEventListener('click', applyFilters);
 document.getElementById('clearFilters').addEventListener('click', clearFilters);
 document.querySelectorAll('.filter-bar select').forEach(el => {
   el.addEventListener('change', applyFilters);
+});
+
+// Search input (debounced)
+let searchTimeout;
+document.getElementById('searchInput').addEventListener('input', () => {
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(applyFilters, 300);
+});
+
+// Mobile modal
+document.getElementById('mobileFilterBtn').addEventListener('click', openFilterModal);
+document.getElementById('filterOverlay').addEventListener('click', closeFilterModal);
+document.getElementById('filterModalClose').addEventListener('click', closeFilterModal);
+document.getElementById('mApplyFilters').addEventListener('click', () => {
+  syncFilters(true); // mobile → desktop
+  applyFilters();
+  closeFilterModal();
+});
+document.getElementById('mClearFilters').addEventListener('click', () => {
+  clearFilters();
+  closeFilterModal();
 });
 
 // ─── INIT ──────────────────────────────────────────────────────────────────────
