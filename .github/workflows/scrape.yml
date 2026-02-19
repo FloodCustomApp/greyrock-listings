@@ -1,0 +1,163 @@
+name: Scrape AppFolio Listings
+
+on:
+  # Run every 30 minutes during business hours (6am-10pm EST / 11:00-03:00 UTC)
+  schedule:
+    - cron: '*/30 11-23,0-3 * * *'  # Every 30 min, 6am-10pm EST
+    - cron: '0 4-10 * * *'           # Once per hour overnight (11pm-6am EST)
+  
+  # Allow manual trigger from GitHub UI
+  workflow_dispatch:
+    inputs:
+      force_commit:
+        description: 'Force commit even if no changes'
+        required: false
+        default: 'false'
+
+# Only allow one scrape to run at a time
+concurrency:
+  group: scrape-listings
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create output directory
+        run: mkdir -p docs
+
+      - name: Run scraper
+        id: scrape
+        run: |
+          node scraper/scrape.mjs
+          echo "exit_code=$?" >> $GITHUB_OUTPUT
+        env:
+          APPFOLIO_URL: ${{ vars.APPFOLIO_URL || 'https://greyrockcommercial.appfolio.com/listings' }}
+
+      - name: Validate output
+        id: validate
+        run: |
+          # Check that listings.json exists and is valid JSON
+          if [ ! -f docs/listings.json ]; then
+            echo "❌ listings.json not found!"
+            exit 1
+          fi
+          
+          # Parse and check the file
+          COUNT=$(node -e "
+            const data = JSON.parse(require('fs').readFileSync('docs/listings.json', 'utf-8'));
+            console.log(data.listings.length);
+          ")
+          
+          UPDATED=$(node -e "
+            const data = JSON.parse(require('fs').readFileSync('docs/listings.json', 'utf-8'));
+            console.log(data.meta.lastUpdated);
+          ")
+          
+          HAS_CHANGES=$(node -e "
+            const data = JSON.parse(require('fs').readFileSync('docs/listings.json', 'utf-8'));
+            console.log(data.meta.hasChanges);
+          ")
+          
+          echo "listing_count=$COUNT" >> $GITHUB_OUTPUT
+          echo "last_updated=$UPDATED" >> $GITHUB_OUTPUT
+          echo "has_changes=$HAS_CHANGES" >> $GITHUB_OUTPUT
+          
+          echo "✅ Found $COUNT listings, updated at $UPDATED"
+
+      - name: Check for stale data
+        id: stale_check
+        run: |
+          # If listings.json existed before this run, check if the timestamp is very old
+          git show HEAD:docs/listings.json 2>/dev/null > /tmp/prev_listings.json || echo '{}' > /tmp/prev_listings.json
+          
+          PREV_TIME=$(node -e "
+            try {
+              const data = JSON.parse(require('fs').readFileSync('/tmp/prev_listings.json', 'utf-8'));
+              const updated = new Date(data.meta?.lastUpdated || 0);
+              const hoursAgo = (Date.now() - updated.getTime()) / (1000 * 60 * 60);
+              console.log(Math.round(hoursAgo));
+            } catch(e) { console.log('0'); }
+          ")
+          
+          echo "hours_since_update=$PREV_TIME" >> $GITHUB_OUTPUT
+          
+          if [ "$PREV_TIME" -gt "4" ] 2>/dev/null; then
+            echo "⚠️ Data was $PREV_TIME hours old before this update"
+          fi
+
+      - name: Commit and push changes
+        if: steps.validate.outputs.has_changes == 'true' || github.event.inputs.force_commit == 'true'
+        run: |
+          git config user.name "GreyRock Listings Bot"
+          git config user.email "listings-bot@greyrockcre.com"
+          
+          git add docs/listings.json
+          
+          COUNT=${{ steps.validate.outputs.listing_count }}
+          TIMESTAMP=$(date -u +"%Y-%m-%d %H:%M UTC")
+          
+          git commit -m "📋 Update listings: $COUNT properties ($TIMESTAMP)" \
+                     -m "Automated scrape from AppFolio" || echo "No changes to commit"
+          
+          git push
+
+      - name: Skip commit (no changes)
+        if: steps.validate.outputs.has_changes != 'true' && github.event.inputs.force_commit != 'true'
+        run: echo "ℹ️ No listing changes detected, skipping commit"
+
+  # ─── ALERT ON FAILURE ─────────────────────────────────────────────────────────
+  alert:
+    runs-on: ubuntu-latest
+    needs: scrape
+    if: failure()
+    
+    steps:
+      - name: Send failure notification
+        uses: dawidd6/action-send-mail@v3
+        # Only sends if SMTP secrets are configured (see README)
+        if: vars.ALERT_EMAIL != ''
+        with:
+          server_address: ${{ secrets.SMTP_SERVER || 'smtp.gmail.com' }}
+          server_port: ${{ secrets.SMTP_PORT || '587' }}
+          username: ${{ secrets.SMTP_USERNAME }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+          subject: "⚠️ GreyRock Listings Scraper Failed"
+          to: ${{ vars.ALERT_EMAIL }}
+          from: ${{ secrets.SMTP_USERNAME || 'listings-bot@greyrockcre.com' }}
+          body: |
+            The GreyRock CRE listings scraper failed at ${{ github.event.head_commit.timestamp || 'unknown time' }}.
+            
+            This may mean AppFolio changed their page structure. Your website will continue 
+            showing the last successful data, but new listings won't appear until this is fixed.
+            
+            🔗 View the failed run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            
+            What to do:
+            1. Check the workflow logs at the link above
+            2. Visit https://greyrockcommercial.appfolio.com/listings to see if the page looks different
+            3. If the page changed, the scraper may need updating
+            
+            — GreyRock Listings Bot
+
+      - name: Log failure (always runs)
+        run: |
+          echo "::error::Scraper failed! Check logs for details."
+          echo "🔗 Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"

@@ -1,0 +1,13 @@
+{
+  "meta": {
+    "lastUpdated": "2026-02-17T00:00:00.000Z",
+    "source": "sample-data",
+    "listingCount": 0,
+    "noVacancies": false,
+    "hasChanges": true,
+    "contentHash": "initial",
+    "version": "1.0.0",
+    "note": "This is placeholder data. It will be replaced by the first scraper run."
+  },
+  "listings": []
+}

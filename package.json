@@ -1,0 +1,14 @@
+{
+  "name": "greyrock-listings",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AppFolio listings scraper for GreyRock Commercial Real Estate",
+  "type": "module",
+  "scripts": {
+    "scrape": "node scraper/scrape.mjs",
+    "test": "node scraper/scrape.mjs && echo 'Scrape successful!'"
+  },
+  "dependencies": {
+    "jsdom": "^25.0.0"
+  }
+}
