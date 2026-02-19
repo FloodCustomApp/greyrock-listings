@@ -1,34 +1,42 @@
 {
   "meta": {
-    "lastUpdated": "2026-02-19T21:04:18.974Z",
+    "lastUpdated": "2026-02-19T21:28:43.163Z",
     "source": "https://greyrockcommercial.appfolio.com/listings",
     "listingCount": 1,
     "noVacancies": false,
     "previousCount": 1,
     "hasChanges": true,
-    "contentHash": "srs2fo",
-    "scrapeDurationMs": 840,
+    "contentHash": "-fjpqfv",
+    "scrapeDurationMs": 728,
     "warnings": [],
-    "version": "1.0.0"
+    "version": "2.0.0"
   },
   "listings": [
     {
       "id": "dc774453-9cf9-40d5-843f-2ac211f04f15",
-      "title": "Coming Soon — Prime Retail Opportunity in Downtown Rockwell",
+      "title": "206 E. Main St. - 206 E Main St., Rockwell, NC 28138\n    MAP",
       "address": "206 E. Main St. - 206 E Main St., Rockwell, NC 28138",
       "city": "Rockwell",
-      "type": "Retail",
+      "type": "Commercial",
+      "leaseType": "Gross",
       "rent": 2400,
-      "sqft": 2400,
+      "sqft": 3200,
       "rentPerSF": 9,
-      "description": "206 E. Main St. - 206 E Main St., Rockwell, NC 28138\n         Map",
-      "available": "Contact for availability",
+      "description": "Position your business in a highly visible location along busy Highway 52 in the heart of Rockwell. This ±3,200 SF retail storefront offers exceptional exposure to steady daily traffic and strong local foot presence, making it ideal for a wide range of retail, service, or specialty commercial uses.\n\nThe interior features a large open showroom floor that can easily adapt to your layout needs, complemented by a private rear office and three restrooms — providing flexibility for customer-facing operations, staff workspace, or multi-use concepts. The building layout supports retail, boutique fitness, professional services, studio space, specialty shops, and more.\n\nCustomers and staff will benefit from convenient parking options, including street parking in front of the building and dedicated parking located behind the property for easy access and operational functionality.\n\nProperty Highlights:\n\n-±3,200 SF retail commercial space\n-Prominent Highway 52 frontage with excellent signage visibility\n-Downtown location with consistent local traffic\n-Large open floor plan with flexible configuration potential\n-Rear private office area\n-Three restrooms\n-Street parking plus dedicated rear parking\n-Suitable for multiple business types\n-Gross Lease option available (simplified occupancy costs)\n\nA rare opportunity to establish or expand your business presence in one of the most visible corridors serving the greater Rowan County community.\n\nContact us for pre-leasing details and availability timing.",
+      "available": "2/20/26",
       "status": "coming-soon",
-      "imageUrl": null,
+      "utilities": null,
+      "imageUrl": "https://images.cdn.appfolio.com/greyrockcommercial/images/d4abdab6-4528-49de-8164-e85f4cd0a447/medium.jpg",
+      "imageUrls": [
+        "https://images.cdn.appfolio.com/greyrockcommercial/images/d4abdab6-4528-49de-8164-e85f4cd0a447/medium.jpg",
+        "https://images.cdn.appfolio.com/greyrockcommercial/images/8fae8040-e430-45a8-ab7a-172381d53c9c/medium.jpg",
+        "https://images.cdn.appfolio.com/greyrockcommercial/images/fe7d7a65-70d5-49ce-8a38-b14dc8f17339/medium.jpg",
+        "https://images.cdn.appfolio.com/greyrockcommercial/images/c4310b2b-db7a-4f33-8ee2-b2c8c6ce03b3/medium.jpg"
+      ],
       "detailUrl": "https://greyrockcommercial.appfolio.com/listings/detail/dc774453-9cf9-40d5-843f-2ac211f04f15",
       "applyUrl": "https://greyrockcommercial.appfolio.com/listings/rental_applications/new?listable_uid=dc774453-9cf9-40d5-843f-2ac211f04f15&source=Website",
-      "lat": 35.32156138783253,
-      "lng": -80.8463659575489
+      "lat": 35.55159017392491,
+      "lng": -80.40373187702035
     }
   ]
 }
