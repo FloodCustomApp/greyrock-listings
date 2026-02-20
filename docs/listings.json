@@ -1,13 +1,13 @@
 {
   "meta": {
-    "lastUpdated": "2026-02-19T23:01:09.038Z",
+    "lastUpdated": "2026-02-20T00:01:42.346Z",
     "source": "https://greyrockcommercial.appfolio.com/listings",
     "listingCount": 1,
     "noVacancies": false,
     "previousCount": 1,
     "hasChanges": true,
-    "contentHash": "5ymryf",
-    "scrapeDurationMs": 1217,
+    "contentHash": "oki3cg",
+    "scrapeDurationMs": 1024,
     "warnings": [],
     "version": "2.0.0"
   },
@@ -23,8 +23,8 @@
       "sqft": 3200,
       "rentPerSF": 9,
       "description": "Position your business in a highly visible location along busy Highway 52 in the heart of Rockwell. This ±3,200 SF retail storefront offers exceptional exposure to steady daily traffic and strong local foot presence, making it ideal for a wide range of retail, service, or specialty commercial uses.\n\nThe interior features a large open showroom floor that can easily adapt to your layout needs, complemented by a private rear office and three restrooms — providing flexibility for customer-facing operations, staff workspace, or multi-use concepts. The building layout supports retail, boutique fitness, professional services, studio space, specialty shops, and more.\n\nCustomers and staff will benefit from convenient parking options, including street parking in front of the building and dedicated parking located behind the property for easy access and operational functionality.\n\nProperty Highlights:\n\n-±3,200 SF retail commercial space\n-Prominent Highway 52 frontage with excellent signage visibility\n-Downtown location with consistent local traffic\n-Large open floor plan with flexible configuration potential\n-Rear private office area\n-Three restrooms\n-Street parking plus dedicated rear parking\n-Suitable for multiple business types\n-Gross Lease option available (simplified occupancy costs)\n\nA rare opportunity to establish or expand your business presence in one of the most visible corridors serving the greater Rowan County community.\n\nContact us for pre-leasing details and availability timing.",
-      "available": "2/20/26",
-      "status": "coming-soon",
+      "available": "Now",
+      "status": "available",
       "utilities": null,
       "imageUrl": "https://images.cdn.appfolio.com/greyrockcommercial/images/d4abdab6-4528-49de-8164-e85f4cd0a447/medium.jpg",
       "imageUrls": [
@@ -35,8 +35,8 @@
       ],
       "detailUrl": "https://greyrockcommercial.appfolio.com/listings/detail/dc774453-9cf9-40d5-843f-2ac211f04f15",
       "applyUrl": "https://greyrockcommercial.appfolio.com/listings/rental_applications/new?listable_uid=dc774453-9cf9-40d5-843f-2ac211f04f15&source=Website",
-      "lat": 35.553718638249926,
-      "lng": -80.40400859340855
+      "lat": 35.55374544037229,
+      "lng": -80.40010840489549
     }
   ]
 }
