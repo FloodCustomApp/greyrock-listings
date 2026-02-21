@@ -39,6 +39,9 @@
     color: var(--text-primary);
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
+    /* Added to help Wix handle scroll gestures better */
+    touch-action: pan-y;
+    overflow-x: hidden;
   }
 
   .container {
@@ -715,8 +718,9 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
-    max-height: calc(100vh - 48px);
-    overflow-y: auto;
+    /* Changed from calc(100vh - 48px) to auto for Wix integration */
+    max-height: none; 
+    overflow-y: visible;
     padding-right: 8px;
   }
 
@@ -1029,7 +1033,6 @@
 <body>
 
 <div class="container">
-  <!-- Stale data warning banner -->
   <div class="stale-banner" id="staleBanner">
     ⚠️ Listings may not reflect the latest availability.
     <a href="https://greyrockcommercial.appfolio.com/listings" target="_blank">View all listings on AppFolio →</a>
@@ -1037,26 +1040,22 @@
 
   <div class="listings-count" id="listingsCount" style="display:none;"></div>
 
-  <!-- Loading state -->
   <div class="loading-state" id="loadingState">
     <div class="loading-spinner"></div>
     <p>Loading available properties...</p>
   </div>
 
-  <!-- Error state (hidden by default) -->
   <div class="error-state" id="errorState" style="display:none;">
     <h3>Unable to Load Listings</h3>
     <p>Please visit <a href="https://greyrockcommercial.appfolio.com/listings" target="_blank">our AppFolio page</a> to view current availability, or <a href="https://www.greyrockcre.com/contact">contact us</a> directly.</p>
   </div>
 
-  <!-- No vacancies state (hidden by default) -->
   <div class="no-vacancies" id="noVacancies" style="display:none;">
     <h2>No Properties Currently Available</h2>
     <p>We don't have any vacancies right now, but availability changes frequently. Contact our team to discuss upcoming spaces or to be added to our waitlist.</p>
     <a href="https://www.greyrockcre.com/contact">Contact Our Team</a>
   </div>
 
-  <!-- Search Bar + Mobile Filter Toggle -->
   <div class="search-bar" id="searchBar" style="display:none;">
     <input type="text" class="search-input" id="searchInput" placeholder="Search by address, name, or description...">
     <button class="mobile-filter-btn" id="mobileFilterBtn">
@@ -1066,7 +1065,6 @@
     </button>
   </div>
 
-  <!-- Filter Bar — desktop only (hidden on mobile via CSS) -->
   <div class="filter-bar" id="filterBar" style="display:none;">
     <div class="filter-group">
       <label>Property Type</label>
@@ -1119,14 +1117,12 @@
     </div>
   </div>
 
-  <!-- Detail Modal -->
   <div class="detail-overlay" id="detailOverlay"></div>
   <div class="detail-modal" id="detailModal">
     <button class="detail-modal-close" id="detailModalClose">&times;</button>
     <div id="detailContent"></div>
   </div>
 
-  <!-- Mobile Filter Modal -->
   <div class="filter-overlay" id="filterOverlay"></div>
   <div class="filter-modal" id="filterModal">
     <div class="filter-modal-header">
@@ -1180,7 +1176,6 @@
     </div>
   </div>
 
-  <!-- Map + Cards Layout (hidden until data loads) -->
   <div class="listings-layout" id="listingsLayout" style="display:none;">
     <div class="map-container">
       <div id="map"></div>
@@ -1190,16 +1185,29 @@
 </div>
 
 <script>
+// ─── WIX RESIZE COMMUNICATION ──────────────────────────────────────────────────
+// This tells the Wix parent page exactly how tall the content is
+function sendHeight() {
+    const height = document.documentElement.scrollHeight;
+    window.parent.postMessage({ "type": "resize", "height": height }, "*");
+}
+
+// Watch for any changes in the app (like opening a modal or loading data)
+const resizeObserver = new MutationObserver(() => {
+    sendHeight();
+});
+resizeObserver.observe(document.body, { attributes: true, childList: true, subtree: true });
+
+// Basic triggers
+window.onload = sendHeight;
+window.onresize = sendHeight;
+
 // ╔══════════════════════════════════════════════════════════════════════════════╗
-// ║  CONFIGURATION — Update these when you set up your GitHub repo             ║
+// ║  CONFIGURATION — Update these when you set up your GitHub repo               ║
 // ╚══════════════════════════════════════════════════════════════════════════════╝
 
-// ⬇️ CHANGE THIS to your GitHub Pages URL after setup
 const DATA_URL = 'https://jaredflood.github.io/greyrock-listings/listings.json';
-// Example after GitHub Pages setup:
-// const DATA_URL = 'https://YOUR_USERNAME.github.io/greyrock-listings/listings.json';
-
-const STALE_THRESHOLD_HOURS = 2;  // Show banner if data is older than this
+const STALE_THRESHOLD_HOURS = 2;  
 const APPFOLIO_FALLBACK = 'https://greyrockcommercial.appfolio.com/listings';
 
 // ─── GLOBAL STATE ──────────────────────────────────────────────────────────────
@@ -1210,12 +1218,11 @@ let map, markers = {}, activeCardId = null;
 
 async function loadListings() {
   try {
-    const response = await fetch(DATA_URL + '?t=' + Date.now()); // cache-bust
+    const response = await fetch(DATA_URL + '?t=' + Date.now()); 
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     
     const data = await response.json();
     
-    // Check data freshness
     if (data.meta?.lastUpdated) {
       const updated = new Date(data.meta.lastUpdated);
       const hoursAgo = (Date.now() - updated.getTime()) / (1000 * 60 * 60);
@@ -1225,7 +1232,6 @@ async function loadListings() {
       }
     }
 
-    // Handle no vacancies
     if (data.meta?.noVacancies || data.listings.length === 0) {
       showNoVacancies();
       return;
@@ -1246,12 +1252,14 @@ function showNoVacancies() {
   document.getElementById('loadingState').style.display = 'none';
   document.getElementById('noVacancies').style.display = 'block';
   document.getElementById('listingsCount').textContent = 'No Current Vacancies';
+  sendHeight();
 }
 
 function showError() {
   document.getElementById('loadingState').style.display = 'none';
   document.getElementById('errorState').style.display = 'block';
   document.getElementById('listingsCount').textContent = 'Unable to Load';
+  sendHeight();
 }
 
 function initializeUI() {
@@ -1260,19 +1268,14 @@ function initializeUI() {
   document.getElementById('filterBar').style.display = 'flex';
   document.getElementById('listingsLayout').style.display = 'grid';
 
-  // Populate dynamic filter options
   populateFilters();
-  
-  // Initialize map
   initMap();
-  
-  // Render
   renderCards(LISTINGS);
   renderMarkers(LISTINGS);
+  sendHeight();
 }
 
 function populateFilters() {
-  // Property types
   const types = [...new Set(LISTINGS.map(l => l.type).filter(Boolean))].sort();
   ['filterType', 'mFilterType'].forEach(id => {
     const sel = document.getElementById(id);
@@ -1284,7 +1287,6 @@ function populateFilters() {
     });
   });
 
-  // Cities
   const cities = [...new Set(LISTINGS.map(l => l.city).filter(Boolean))].sort();
   ['filterCity', 'mFilterCity'].forEach(id => {
     const sel = document.getElementById(id);
@@ -1331,6 +1333,7 @@ function renderCards(listings) {
         <p>Try adjusting your filters or clearing the search.</p>
       </div>`;
     countEl.textContent = '0 Properties Found';
+    sendHeight();
     return;
   }
 
@@ -1394,6 +1397,7 @@ function renderCards(listings) {
       </div>
     </div>`;
   }).join('');
+  sendHeight();
 }
 
 function renderMarkers(listings) {
@@ -1465,15 +1469,11 @@ function highlightProperty(id) {
 
 // ─── FILTERS & SEARCH ─────────────────────────────────────────────────────────
 
-// Determine if we're reading from mobile modal or desktop bar
 function isMobile() {
   return window.innerWidth <= 768;
 }
 
 function getFilterValues() {
-  const prefix = isMobile() ? 'm' : '';
-  const getId = (base) => prefix ? `${prefix}${base.charAt(0).toUpperCase() + base.slice(1)}` : base;
-  
   return {
     type: document.getElementById(isMobile() ? 'mFilterType' : 'filterType').value,
     minPrice: parseInt(document.getElementById(isMobile() ? 'mFilterMinPrice' : 'filterMinPrice').value) || 0,
@@ -1484,27 +1484,8 @@ function getFilterValues() {
   };
 }
 
-function countActiveFilters() {
-  const v = getFilterValues();
-  let count = 0;
-  if (v.type) count++;
-  if (v.minPrice > 0) count++;
-  if (v.maxPrice < Infinity) count++;
-  if (v.minSqft > 0) count++;
-  if (v.city) count++;
-  return count;
-}
-
-function updateFilterBadge() {
-  const count = countActiveFilters();
-  const badge = document.getElementById('filterBadge');
-  badge.textContent = count;
-  badge.classList.toggle('visible', count > 0);
-}
-
 function applyFilters() {
   const v = getFilterValues();
-
   const filtered = LISTINGS.filter(l => {
     if (v.type && l.type !== v.type) return false;
     if (l.rent && l.rent < v.minPrice) return false;
@@ -1522,10 +1503,23 @@ function applyFilters() {
   renderCards(filtered);
   renderMarkers(filtered);
   updateFilterBadge();
+  sendHeight();
+}
+
+function updateFilterBadge() {
+  const v = getFilterValues();
+  let count = 0;
+  if (v.type) count++;
+  if (v.minPrice > 0) count++;
+  if (v.maxPrice < Infinity) count++;
+  if (v.minSqft > 0) count++;
+  if (v.city) count++;
+  const badge = document.getElementById('filterBadge');
+  badge.textContent = count;
+  badge.classList.toggle('visible', count > 0);
 }
 
 function clearFilters() {
-  // Clear both desktop and mobile
   ['filterType','filterMinPrice','filterMaxPrice','filterSqFt','filterCity',
    'mFilterType','mFilterMinPrice','mFilterMaxPrice','mFilterSqFt','mFilterCity'].forEach(id => {
     document.getElementById(id).value = '';
@@ -1535,9 +1529,9 @@ function clearFilters() {
   renderCards(LISTINGS);
   renderMarkers(LISTINGS);
   updateFilterBadge();
+  sendHeight();
 }
 
-// Sync desktop → mobile and vice versa
 function syncFilters(fromMobile) {
   const pairs = [
     ['filterType', 'mFilterType'],
@@ -1561,14 +1555,12 @@ function openDetail(id) {
   const l = LISTINGS.find(x => x.id === id);
   if (!l) return;
 
-  // Also highlight on map
   highlightProperty(id);
 
   const rent = l.rent ? `$${l.rent.toLocaleString()}` : 'Contact for Pricing';
   const perSF = (l.rent && l.sqft) ? `$${(l.rent / l.sqft * 12).toFixed(2)}/SF/YR` : null;
   const sqftDisplay = l.sqft ? `${l.sqft.toLocaleString()} SF` : null;
 
-  // Gallery HTML
   let galleryHTML;
   if (l.imageUrls && l.imageUrls.length > 1) {
     galleryHTML = `
@@ -1591,13 +1583,11 @@ function openDetail(id) {
     </div>`;
   }
 
-  // Stats
   const stats = [];
   stats.push(`<div class="detail-stat"><div class="detail-stat-value">${rent}</div><div class="detail-stat-label">Monthly Rent</div></div>`);
   if (sqftDisplay) stats.push(`<div class="detail-stat"><div class="detail-stat-value">${sqftDisplay}</div><div class="detail-stat-label">Square Feet</div></div>`);
   if (perSF) stats.push(`<div class="detail-stat"><div class="detail-stat-value">${perSF}</div><div class="detail-stat-label">Price Per SF</div></div>`);
 
-  // Tags
   const tags = [];
   if (l.type) tags.push(l.type);
   if (l.leaseType) tags.push(l.leaseType);
@@ -1612,21 +1602,16 @@ function openDetail(id) {
       <span class="detail-type">${l.type || 'Commercial'}</span>
       <div class="detail-title">${l.title}</div>
       <div class="detail-address">${l.address || ''}${l.city ? ', ' + l.city : ''}</div>
-
       <div class="detail-status ${statusClass}">
         <span class="status-dot"></span>
         ${statusText}
       </div>
-
       <div class="detail-stats">${stats.join('')}</div>
-
       ${tags.length ? `<div class="detail-extras">${tags.map(t => `<span class="detail-tag">${t}</span>`).join('')}</div>` : ''}
-
       ${l.description ? `
         <div class="detail-section-heading">About This Property</div>
         <div class="detail-description">${l.description}</div>
       ` : ''}
-
       <div class="detail-actions">
         <a class="btn-primary" href="https://www.greyrockcre.com/contact" target="_blank">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
@@ -1639,13 +1624,14 @@ function openDetail(id) {
 
   document.getElementById('detailOverlay').classList.add('open');
   document.getElementById('detailModal').classList.add('open');
-  document.body.style.overflow = 'hidden';
+  // Note: We leave body overflow alone because Wix handles the scroll resize
+  sendHeight();
 }
 
 function closeDetail() {
   document.getElementById('detailOverlay').classList.remove('open');
   document.getElementById('detailModal').classList.remove('open');
-  document.body.style.overflow = '';
+  sendHeight();
 }
 
 function detailGalleryNav(dir) {
@@ -1665,35 +1651,32 @@ function detailGalleryNav(dir) {
 // ─── MOBILE FILTER MODAL ──────────────────────────────────────────────────────
 
 function openFilterModal() {
-  syncFilters(false); // desktop → mobile
+  syncFilters(false); 
   document.getElementById('filterOverlay').classList.add('open');
   document.getElementById('filterModal').classList.add('open');
-  document.body.style.overflow = 'hidden';
+  sendHeight();
 }
 
 function closeFilterModal() {
   document.getElementById('filterOverlay').classList.remove('open');
   document.getElementById('filterModal').classList.remove('open');
-  document.body.style.overflow = '';
+  sendHeight();
 }
 
 // ─── EVENT LISTENERS ───────────────────────────────────────────────────────────
 
-// Desktop filters
 document.getElementById('applyFilters').addEventListener('click', applyFilters);
 document.getElementById('clearFilters').addEventListener('click', clearFilters);
 document.querySelectorAll('.filter-bar select').forEach(el => {
   el.addEventListener('change', applyFilters);
 });
 
-// Search input (debounced)
 let searchTimeout;
 document.getElementById('searchInput').addEventListener('input', () => {
   clearTimeout(searchTimeout);
   searchTimeout = setTimeout(applyFilters, 300);
 });
 
-// Detail modal
 document.getElementById('detailOverlay').addEventListener('click', closeDetail);
 document.getElementById('detailModalClose').addEventListener('click', closeDetail);
 document.addEventListener('keydown', e => {
@@ -1703,12 +1686,11 @@ document.addEventListener('keydown', e => {
   }
 });
 
-// Mobile modal
 document.getElementById('mobileFilterBtn').addEventListener('click', openFilterModal);
 document.getElementById('filterOverlay').addEventListener('click', closeFilterModal);
 document.getElementById('filterModalClose').addEventListener('click', closeFilterModal);
 document.getElementById('mApplyFilters').addEventListener('click', () => {
-  syncFilters(true); // mobile → desktop
+  syncFilters(true); 
   applyFilters();
   closeFilterModal();
 });
