@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GreyRock CRE - Commercial Properties</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Playfair+Display:wght@400;500;600;700&family=Wix+Madefor+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
@@ -44,7 +44,53 @@
   .container {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 0 24px;
+    padding: 120px 24px 24px;
+  }
+
+  /* ─── APP HEADER ─── */
+  .app-header {
+    margin-bottom: 48px;
+  }
+
+  .app-header-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+    font-family: 'Wix Madefor Text', sans-serif;
+  }
+
+  .app-header-eyebrow svg {
+    color: var(--accent);
+    width: 20px;
+    height: 20px;
+  }
+
+  .app-header-title {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: 24px;
+    line-height: 1.1;
+  }
+
+  .app-header-description {
+    font-family: 'Wix Madefor Text', sans-serif;
+    color: var(--text-secondary);
+    font-size: 1.05rem;
+    line-height: 1.8;
+    max-width: 1250px;
+  }
+
+  .app-header-description strong {
+    color: var(--accent);
+    font-weight: 600;
   }
 
   /* ─── STALE DATA BANNER ─── */
@@ -700,6 +746,22 @@
 <body>
 
 <div class="container">
+  <!-- App Header -->
+  <div class="app-header">
+    <div class="app-header-eyebrow">
+      <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="4" cy="4" r="2.5"/><circle cx="12" cy="4" r="2.5"/><circle cx="20" cy="4" r="2.5"/>
+        <circle cx="4" cy="12" r="2.5"/><circle cx="12" cy="12" r="2.5"/><circle cx="20" cy="12" r="2.5"/>
+        <circle cx="4" cy="20" r="2.5"/><circle cx="12" cy="20" r="2.5"/><circle cx="20" cy="20" r="2.5"/>
+      </svg>
+      Serving the Charlotte Metro Area
+    </div>
+    <h1 class="app-header-title">Commercial Properties for Lease</h1>
+    <p class="app-header-description">
+      <strong>GreyRock Commercial Real Estate</strong> provides full-service commercial property management, leasing, and investment support throughout the greater Charlotte metro area. We help owners protect their assets, reduce operational stress, and maximize long-term performance across retail, office, industrial, and mixed-use properties.
+    </p>
+  </div>
+
   <!-- Stale data warning banner -->
   <div class="stale-banner" id="staleBanner">
     ⚠️ Listings may not reflect the latest availability.
