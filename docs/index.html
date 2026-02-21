@@ -39,7 +39,7 @@
     color: var(--text-primary);
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
-    /* Added to help Wix handle scroll gestures better */
+    /* Optimize for iframe embedding */
     touch-action: pan-y;
     overflow-x: hidden;
   }
@@ -659,14 +659,13 @@
     grid-template-columns: 1fr 1fr;
     gap: 24px;
     margin-bottom: 48px;
+    align-items: start;
   }
 
   /* ─── MAP ─── */
   .map-container {
-    position: sticky;
-    top: 24px;
-    height: calc(100vh - 48px);
-    max-height: 700px;
+    position: relative; /* Changed to allow native iframe expansion */
+    height: 600px; /* Fixed height so it doesn't break Wix Studio limits */
     border-radius: var(--radius-lg);
     overflow: hidden;
     border: 1px solid var(--border);
@@ -718,15 +717,10 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
-    /* Changed from calc(100vh - 48px) to auto for Wix integration */
-    max-height: none; 
-    overflow-y: visible;
-    padding-right: 8px;
+    height: auto; /* Removed max-height constraints */
+    overflow-y: visible; /* Prevent internal scroll, forces Wix to expand */
+    padding-right: 0px;
   }
-
-  .cards-container::-webkit-scrollbar { width: 4px; }
-  .cards-container::-webkit-scrollbar-track { background: transparent; }
-  .cards-container::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
   .property-card {
     display: grid;
@@ -1006,7 +1000,6 @@
   @media (max-width: 1024px) {
     .listings-layout { grid-template-columns: 1fr; }
     .map-container { position: relative; top: 0; height: 400px; max-height: 400px; }
-    .cards-container { max-height: none; overflow-y: visible; }
   }
 
   @media (max-width: 768px) {
@@ -1186,13 +1179,18 @@
 
 <script>
 // ─── WIX RESIZE COMMUNICATION ──────────────────────────────────────────────────
-// This tells the Wix parent page exactly how tall the content is
+// Sends the dynamic height of the expanded content to Wix
 function sendHeight() {
     const height = document.documentElement.scrollHeight;
     window.parent.postMessage({ "type": "resize", "height": height }, "*");
+    
+    // Nudge the Leaflet map to redraw itself just in case the container changes size
+    if (map) {
+        setTimeout(() => { map.invalidateSize(); }, 200);
+    }
 }
 
-// Watch for any changes in the app (like opening a modal or loading data)
+// Watch for any changes in the app (like properties loading or modals opening)
 const resizeObserver = new MutationObserver(() => {
     sendHeight();
 });
@@ -1203,7 +1201,7 @@ window.onload = sendHeight;
 window.onresize = sendHeight;
 
 // ╔══════════════════════════════════════════════════════════════════════════════╗
-// ║  CONFIGURATION — Update these when you set up your GitHub repo               ║
+// ║  CONFIGURATION                                                               ║
 // ╚══════════════════════════════════════════════════════════════════════════════╝
 
 const DATA_URL = 'https://jaredflood.github.io/greyrock-listings/listings.json';
@@ -1624,7 +1622,6 @@ function openDetail(id) {
 
   document.getElementById('detailOverlay').classList.add('open');
   document.getElementById('detailModal').classList.add('open');
-  // Note: We leave body overflow alone because Wix handles the scroll resize
   sendHeight();
 }
 
