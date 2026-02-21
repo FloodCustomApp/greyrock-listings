@@ -39,9 +39,6 @@
     color: var(--text-primary);
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
-    /* Optimize for iframe embedding */
-    touch-action: pan-y;
-    overflow-x: hidden;
   }
 
   .container {
@@ -659,13 +656,14 @@
     grid-template-columns: 1fr 1fr;
     gap: 24px;
     margin-bottom: 48px;
-    align-items: start;
   }
 
   /* ─── MAP ─── */
   .map-container {
-    position: relative; /* Changed to allow native iframe expansion */
-    height: 600px; /* Fixed height so it doesn't break Wix Studio limits */
+    position: sticky;
+    top: 24px;
+    height: calc(100vh - 48px);
+    max-height: 700px;
     border-radius: var(--radius-lg);
     overflow: hidden;
     border: 1px solid var(--border);
@@ -717,10 +715,16 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
-    height: auto; /* Removed max-height constraints */
-    overflow-y: visible; /* Prevent internal scroll, forces Wix to expand */
-    padding-right: 0px;
+    max-height: calc(100vh - 48px);
+    overflow-y: auto;
+    padding-right: 8px;
+    /* THIS IS THE FIX TO STOP SCROLL HIJACKING */
+    overscroll-behavior: contain; 
   }
+
+  .cards-container::-webkit-scrollbar { width: 4px; }
+  .cards-container::-webkit-scrollbar-track { background: transparent; }
+  .cards-container::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
   .property-card {
     display: grid;
@@ -1000,6 +1004,7 @@
   @media (max-width: 1024px) {
     .listings-layout { grid-template-columns: 1fr; }
     .map-container { position: relative; top: 0; height: 400px; max-height: 400px; }
+    .cards-container { max-height: none; overflow-y: visible; }
   }
 
   @media (max-width: 768px) {
@@ -1178,41 +1183,12 @@
 </div>
 
 <script>
-// ─── WIX RESIZE COMMUNICATION ──────────────────────────────────────────────────
-// Sends the dynamic height of the expanded content to Wix
-function sendHeight() {
-    const height = document.documentElement.scrollHeight;
-    window.parent.postMessage({ "type": "resize", "height": height }, "*");
-    
-    // Nudge the Leaflet map to redraw itself just in case the container changes size
-    if (map) {
-        setTimeout(() => { map.invalidateSize(); }, 200);
-    }
-}
-
-// Watch for any changes in the app (like properties loading or modals opening)
-const resizeObserver = new MutationObserver(() => {
-    sendHeight();
-});
-resizeObserver.observe(document.body, { attributes: true, childList: true, subtree: true });
-
-// Basic triggers
-window.onload = sendHeight;
-window.onresize = sendHeight;
-
-// ╔══════════════════════════════════════════════════════════════════════════════╗
-// ║  CONFIGURATION                                                               ║
-// ╚══════════════════════════════════════════════════════════════════════════════╝
-
 const DATA_URL = 'https://jaredflood.github.io/greyrock-listings/listings.json';
-const STALE_THRESHOLD_HOURS = 2;  
+const STALE_THRESHOLD_HOURS = 2;
 const APPFOLIO_FALLBACK = 'https://greyrockcommercial.appfolio.com/listings';
 
-// ─── GLOBAL STATE ──────────────────────────────────────────────────────────────
 let LISTINGS = [];
 let map, markers = {}, activeCardId = null;
-
-// ─── DATA FETCHING ─────────────────────────────────────────────────────────────
 
 async function loadListings() {
   try {
@@ -1244,20 +1220,16 @@ async function loadListings() {
   }
 }
 
-// ─── UI STATE MANAGEMENT ───────────────────────────────────────────────────────
-
 function showNoVacancies() {
   document.getElementById('loadingState').style.display = 'none';
   document.getElementById('noVacancies').style.display = 'block';
   document.getElementById('listingsCount').textContent = 'No Current Vacancies';
-  sendHeight();
 }
 
 function showError() {
   document.getElementById('loadingState').style.display = 'none';
   document.getElementById('errorState').style.display = 'block';
   document.getElementById('listingsCount').textContent = 'Unable to Load';
-  sendHeight();
 }
 
 function initializeUI() {
@@ -1270,7 +1242,6 @@ function initializeUI() {
   initMap();
   renderCards(LISTINGS);
   renderMarkers(LISTINGS);
-  sendHeight();
 }
 
 function populateFilters() {
@@ -1297,8 +1268,6 @@ function populateFilters() {
   });
 }
 
-// ─── MAP SETUP ─────────────────────────────────────────────────────────────────
-
 function initMap() {
   map = L.map('map', { zoomControl: true, scrollWheelZoom: true }).setView([35.32, -80.85], 10);
 
@@ -1318,8 +1287,6 @@ function createIcon(active = false) {
   });
 }
 
-// ─── RENDER FUNCTIONS ──────────────────────────────────────────────────────────
-
 function renderCards(listings) {
   const container = document.getElementById('cardsContainer');
   const countEl = document.getElementById('listingsCount');
@@ -1331,7 +1298,6 @@ function renderCards(listings) {
         <p>Try adjusting your filters or clearing the search.</p>
       </div>`;
     countEl.textContent = '0 Properties Found';
-    sendHeight();
     return;
   }
 
@@ -1395,7 +1361,6 @@ function renderCards(listings) {
       </div>
     </div>`;
   }).join('');
-  sendHeight();
 }
 
 function renderMarkers(listings) {
@@ -1465,8 +1430,6 @@ function highlightProperty(id) {
   }
 }
 
-// ─── FILTERS & SEARCH ─────────────────────────────────────────────────────────
-
 function isMobile() {
   return window.innerWidth <= 768;
 }
@@ -1501,7 +1464,6 @@ function applyFilters() {
   renderCards(filtered);
   renderMarkers(filtered);
   updateFilterBadge();
-  sendHeight();
 }
 
 function updateFilterBadge() {
@@ -1527,7 +1489,6 @@ function clearFilters() {
   renderCards(LISTINGS);
   renderMarkers(LISTINGS);
   updateFilterBadge();
-  sendHeight();
 }
 
 function syncFilters(fromMobile) {
@@ -1546,8 +1507,6 @@ function syncFilters(fromMobile) {
     }
   });
 }
-
-// ─── DETAIL MODAL ─────────────────────────────────────────────────────────────
 
 function openDetail(id) {
   const l = LISTINGS.find(x => x.id === id);
@@ -1622,13 +1581,11 @@ function openDetail(id) {
 
   document.getElementById('detailOverlay').classList.add('open');
   document.getElementById('detailModal').classList.add('open');
-  sendHeight();
 }
 
 function closeDetail() {
   document.getElementById('detailOverlay').classList.remove('open');
   document.getElementById('detailModal').classList.remove('open');
-  sendHeight();
 }
 
 function detailGalleryNav(dir) {
@@ -1645,22 +1602,16 @@ function detailGalleryNav(dir) {
   if (count) count.textContent = `${idx + 1}/${imgs.length}`;
 }
 
-// ─── MOBILE FILTER MODAL ──────────────────────────────────────────────────────
-
 function openFilterModal() {
   syncFilters(false); 
   document.getElementById('filterOverlay').classList.add('open');
   document.getElementById('filterModal').classList.add('open');
-  sendHeight();
 }
 
 function closeFilterModal() {
   document.getElementById('filterOverlay').classList.remove('open');
   document.getElementById('filterModal').classList.remove('open');
-  sendHeight();
 }
-
-// ─── EVENT LISTENERS ───────────────────────────────────────────────────────────
 
 document.getElementById('applyFilters').addEventListener('click', applyFilters);
 document.getElementById('clearFilters').addEventListener('click', clearFilters);
@@ -1696,7 +1647,6 @@ document.getElementById('mClearFilters').addEventListener('click', () => {
   closeFilterModal();
 });
 
-// ─── INIT ──────────────────────────────────────────────────────────────────────
 loadListings();
 </script>
 
