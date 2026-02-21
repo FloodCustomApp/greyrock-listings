@@ -729,6 +729,110 @@
     .card-image, .card-image-placeholder, .card-gallery, .card-gallery img { min-height: 180px; max-height: 200px; }
   }
 
+  /* ─── FOOTER ─── */
+  .site-footer {
+    background: var(--bg-primary);
+    border-top: 1px solid var(--border);
+    margin-top: 64px;
+    padding: 48px 24px 24px;
+  }
+
+  .footer-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .footer-columns {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 40px;
+  }
+
+  .footer-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0 40px;
+  }
+
+  .footer-col + .footer-col {
+    border-left: 1px solid var(--accent);
+  }
+
+  .footer-logo svg {
+    width: 120px;
+    height: auto;
+    margin-bottom: 12px;
+  }
+
+  .footer-logo-text {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 1.3rem;
+    font-weight: 400;
+    letter-spacing: 0.15em;
+    color: var(--text-primary);
+    text-transform: uppercase;
+  }
+
+  .footer-logo-sub {
+    font-family: 'Wix Madefor Text', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .footer-col p {
+    font-family: 'Wix Madefor Text', sans-serif;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  .footer-col a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color var(--transition);
+  }
+
+  .footer-col a:hover { color: var(--accent); }
+
+  .footer-bottom {
+    text-align: center;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-family: 'Wix Madefor Text', sans-serif;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .footer-bottom a {
+    color: var(--text-primary);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .footer-bottom a:hover { color: var(--accent); }
+
+  @media (max-width: 768px) {
+    .footer-columns {
+      flex-direction: column;
+      gap: 32px;
+    }
+    .footer-col + .footer-col {
+      border-left: none;
+      border-top: 1px solid var(--accent);
+      padding-top: 32px;
+    }
+    .footer-col { padding: 0; }
+  }
+
   /* ─── ANIMATIONS ─── */
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(16px); }
@@ -914,6 +1018,44 @@
     <div class="cards-container" id="cardsContainer"></div>
   </div>
 </div>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-columns">
+      <div class="footer-col">
+        <div class="footer-logo">
+          <svg viewBox="0 0 200 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Stylized building skyline -->
+            <rect x="20" y="60" width="18" height="80" fill="#C8A86E" opacity="0.7"/>
+            <rect x="44" y="40" width="18" height="100" fill="#C8A86E" opacity="0.8"/>
+            <rect x="68" y="20" width="18" height="120" fill="#C8A86E" opacity="0.9"/>
+            <rect x="92" y="10" width="18" height="130" fill="#C8A86E"/>
+            <rect x="116" y="25" width="18" height="115" fill="#C8A86E" opacity="0.9"/>
+            <rect x="140" y="45" width="18" height="95" fill="#C8A86E" opacity="0.8"/>
+            <rect x="164" y="65" width="18" height="75" fill="#C8A86E" opacity="0.7"/>
+            <!-- Roofline accent -->
+            <path d="M10 140 L100 5 L190 140" stroke="#C8A86E" stroke-width="2" fill="none" opacity="0.4"/>
+          </svg>
+        </div>
+        <div class="footer-logo-text">GreyRock</div>
+        <div class="footer-logo-sub">Commercial Real Estate</div>
+      </div>
+      <div class="footer-col">
+        <p>8410 Pit Stop Ct Nw Ste 141<br>Concord, NC. 28027</p>
+      </div>
+      <div class="footer-col">
+        <p>
+          <a href="mailto:info@GreyRockCRE.com">info@GreyRockCRE.com</a><br>
+          <a href="tel:7047074925">704-707-4925</a>
+        </p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      © 2026 GreyRock Commercial Real Estate. | Designed by <a href="https://floodcreative.co" target="_blank">FloodCreative.co</a>
+    </div>
+  </div>
+</footer>
 
 <script>
 // ╔══════════════════════════════════════════════════════════════════════════════╗
