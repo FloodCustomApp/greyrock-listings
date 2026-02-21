@@ -4,8 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GreyRock CRE - Commercial Properties</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
@@ -34,7 +32,8 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
-    font-family: 'DM Sans', sans-serif;
+    /* Updated to Wix standard font */
+    font-family: 'Wix Madefor Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     background: var(--bg-primary);
     color: var(--text-primary);
     line-height: 1.6;
@@ -44,7 +43,53 @@
   .container {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 0 24px;
+    /* Added 120px padding for Wix header overhang space */
+    padding: 120px 24px 24px;
+  }
+
+  /* ─── APP HEADER TEXT ─── */
+  .app-header {
+    margin-bottom: 48px;
+  }
+
+  .app-header-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+  }
+
+  .app-header-eyebrow svg {
+    color: var(--accent);
+    width: 20px;
+    height: 20px;
+  }
+
+  .app-header-title {
+    /* Updated to Times */
+    font-family: 'Times New Roman', Times, serif;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: 24px;
+    line-height: 1.1;
+  }
+
+  .app-header-description {
+    color: var(--text-secondary);
+    font-size: 1.05rem;
+    line-height: 1.8;
+    max-width: 1250px;
+  }
+
+  .app-header-description strong {
+    color: var(--accent);
+    font-weight: 600;
   }
 
   /* ─── STALE DATA BANNER ─── */
@@ -64,941 +109,50 @@
   }
 
   .stale-banner.visible { display: flex; }
+  .stale-banner a { color: var(--yellow); text-decoration: underline; }
 
-  .stale-banner a {
-    color: var(--yellow);
-    text-decoration: underline;
-  }
-
-  /* ─── LOADING STATE ─── */
-  .loading-state {
-    text-align: center;
-    padding: 80px 20px;
-    color: var(--text-muted);
-  }
-
-  .loading-spinner {
-    width: 40px;
-    height: 40px;
-    border: 3px solid var(--border);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    margin: 0 auto 16px;
-  }
-
+  /* ─── LOADING/ERROR/SEARCH ─── */
+  .loading-state { text-align: center; padding: 80px 20px; color: var(--text-muted); }
+  .loading-spinner { width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* ─── ERROR STATE ─── */
-  .error-state {
-    text-align: center;
-    padding: 60px 20px;
-    color: var(--text-muted);
-  }
-
-  .error-state h3 {
-    font-family: 'Playfair Display', serif;
-    color: var(--text-secondary);
-    margin-bottom: 8px;
-  }
-
-  .error-state a {
-    color: var(--accent);
-    text-decoration: none;
-  }
-
-  /* ─── HEADER ─── */
-  /* ─── SEARCH BAR ─── */
-  .search-bar {
-    display: flex;
-    gap: 12px;
-    margin: 16px 0 12px;
-    align-items: center;
-  }
-
-  .search-input {
-    flex: 1;
-    background: var(--bg-secondary);
-    border: 1px solid var(--border);
-    color: var(--text-primary);
-    padding: 12px 16px 12px 44px;
-    border-radius: var(--radius-lg);
-    font-family: inherit;
-    font-size: 0.95rem;
-    outline: none;
-    transition: border-color var(--transition);
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: 14px center;
-  }
-
-  .search-input::placeholder { color: var(--text-muted); }
-  .search-input:focus { border-color: var(--accent); }
-
-  .mobile-filter-btn {
-    display: none;
-    align-items: center;
-    gap: 6px;
-    padding: 12px 18px;
-    background: var(--bg-secondary);
-    border: 1px solid var(--border);
-    color: var(--text-primary);
-    border-radius: var(--radius-lg);
-    font-family: inherit;
-    font-size: 0.9rem;
-    font-weight: 500;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: border-color var(--transition);
-  }
-
-  .mobile-filter-btn:hover { border-color: var(--accent); }
-
-  .mobile-filter-btn svg { flex-shrink: 0; }
-
-  .filter-badge {
-    background: var(--accent);
-    color: var(--bg-primary);
-    font-size: 0.7rem;
-    font-weight: 700;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    display: none;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .filter-badge.visible { display: flex; }
-
-  /* ─── FILTER BAR ─── */
-  .filter-bar {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    padding: 20px 24px;
-    background: var(--bg-secondary);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    margin: 0 0 24px;
-    align-items: center;
-  }
-
-  /* ─── DETAIL MODAL ─── */
-  .detail-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.7);
-    z-index: 2000;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    backdrop-filter: blur(4px);
-  }
-
-  .detail-overlay.open { display: block; opacity: 1; }
-
-  .detail-modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0.95);
-    background: var(--bg-secondary);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    z-index: 2001;
-    width: 92%;
-    max-width: 780px;
-    max-height: 90vh;
-    overflow-y: auto;
-    opacity: 0;
-    transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.4,0,0.2,1);
-    display: none;
-  }
-
-  .detail-modal.open {
-    display: block;
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
-
-  .detail-modal-close {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    z-index: 10;
-    background: rgba(0,0,0,0.6);
-    border: none;
-    color: #fff;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    font-size: 1.3rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.2s;
-  }
-
-  .detail-modal-close:hover { background: rgba(0,0,0,0.85); }
-
-  /* Gallery in detail modal */
-  .detail-gallery {
-    position: relative;
-    width: 100%;
-    height: 360px;
-    overflow: hidden;
-    border-radius: 16px 16px 0 0;
-    background: var(--bg-card);
-  }
-
-  .detail-gallery img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    opacity: 0;
-    transition: opacity 0.4s ease;
-  }
-
-  .detail-gallery img.active { opacity: 1; }
-
-  .detail-gallery .gallery-nav {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(0,0,0,0.5);
-    color: #fff;
-    border: none;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    font-size: 1.4rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.2s;
-  }
-
-  .detail-gallery:hover .gallery-nav { opacity: 1; }
-  .detail-gallery .gallery-nav.prev { left: 12px; }
-  .detail-gallery .gallery-nav.next { right: 12px; }
-  .detail-gallery .gallery-nav:hover { background: rgba(0,0,0,0.8); }
-
-  .detail-gallery .gallery-dots {
-    position: absolute;
-    bottom: 12px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 6px;
-  }
-
-  .detail-gallery .gallery-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.4);
-    transition: background 0.2s;
-  }
-
-  .detail-gallery .gallery-dot.active { background: #fff; }
-
-  .detail-gallery .gallery-count {
-    position: absolute;
-    top: 12px;
-    left: 12px;
-    right: auto;
-    background: rgba(0,0,0,0.6);
-    color: #fff;
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    width: auto;
-  }
-
-  .detail-placeholder {
-    width: 100%;
-    height: 200px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--bg-card);
-    border-radius: 16px 16px 0 0;
-    color: var(--text-muted);
-  }
-
-  .detail-placeholder svg { width: 64px; height: 64px; }
-
-  /* Detail content */
-  .detail-content {
-    padding: 28px 32px 32px;
-  }
-
-  .detail-type {
-    display: inline-block;
-    padding: 4px 12px;
-    background: rgba(200,170,110,0.15);
-    color: var(--accent);
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-bottom: 12px;
-  }
-
-  .detail-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 4px;
-    line-height: 1.3;
-  }
-
-  .detail-address {
-    font-size: 0.95rem;
-    color: var(--text-secondary);
-    margin-bottom: 20px;
-  }
-
-  .detail-stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-    gap: 16px;
-    padding: 20px 0;
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 20px;
-  }
-
-  .detail-stat {
-    text-align: center;
-  }
-
-  .detail-stat-value {
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: var(--accent);
-  }
-
-  .detail-stat-label {
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--text-muted);
-    margin-top: 2px;
-  }
-
-  .detail-status {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 0.82rem;
-    font-weight: 600;
-    margin-bottom: 20px;
-  }
-
-  .detail-status.available { background: rgba(16,185,129,0.12); color: #10b981; }
-  .detail-status.coming-soon { background: rgba(245,158,11,0.12); color: #f59e0b; }
-
-  .detail-section-heading {
-    font-size: 0.78rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--text-muted);
-    font-weight: 600;
-    margin-bottom: 8px;
-  }
-
-  .detail-description {
-    font-size: 0.95rem;
-    color: var(--text-secondary);
-    line-height: 1.7;
-    margin-bottom: 24px;
-    white-space: pre-line;
-  }
-
-  .detail-extras {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 24px;
-  }
-
-  .detail-tag {
-    padding: 6px 14px;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    font-size: 0.82rem;
-    color: var(--text-secondary);
-  }
-
-  .detail-actions {
-    display: flex;
-    gap: 12px;
-    margin-top: 8px;
-  }
-
-  .detail-actions .btn-primary {
-    flex: 1;
-    padding: 14px 24px;
-    background: var(--accent);
-    color: var(--bg-primary);
-    border: none;
-    border-radius: var(--radius);
-    font-family: inherit;
-    font-size: 0.95rem;
-    font-weight: 600;
-    cursor: pointer;
-    text-align: center;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    transition: background 0.2s;
-  }
-
-  .detail-actions .btn-primary:hover { background: var(--accent-hover); }
-
-  .detail-actions .btn-secondary {
-    padding: 14px 20px;
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--text-secondary);
-    border-radius: var(--radius);
-    font-family: inherit;
-    font-size: 0.9rem;
-    cursor: pointer;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    transition: border-color 0.2s, color 0.2s;
-  }
-
-  .detail-actions .btn-secondary:hover { border-color: var(--accent); color: var(--text-primary); }
-
-  @media (max-width: 768px) {
-    .detail-modal {
-      width: 100%;
-      max-width: 100%;
-      height: 100%;
-      max-height: 100%;
-      border-radius: 0;
-      top: 0;
-      left: 0;
-      transform: translateY(100%);
-    }
-    .detail-modal.open { transform: translateY(0); }
-    .detail-gallery { height: 260px; border-radius: 0; }
-    .detail-content { padding: 20px; }
-    .detail-title { font-size: 1.25rem; }
-    .detail-actions { flex-direction: column; }
-    .detail-placeholder { border-radius: 0; }
-  }
-
-  /* ─── MOBILE FILTER MODAL ─── */
-  .filter-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.6);
-    z-index: 1000;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-
-  .filter-overlay.open { display: block; opacity: 1; }
-
-  .filter-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    background: var(--bg-secondary);
-    border-bottom: 1px solid var(--border);
-    border-radius: 0 0 16px 16px;
-    padding: 24px;
-    z-index: 1001;
-    transform: translateY(-100%);
-    transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
-    max-height: 85vh;
-    overflow-y: auto;
-  }
-
-  .filter-overlay.open + .filter-modal,
-  .filter-modal.open { transform: translateY(0); }
-
-  .filter-modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-
-  .filter-modal-header h3 {
-    font-size: 1.1rem;
-    font-weight: 600;
-  }
-
-  .filter-modal-close {
-    background: none;
-    border: none;
-    color: var(--text-secondary);
-    font-size: 1.5rem;
-    cursor: pointer;
-    padding: 4px 8px;
-    line-height: 1;
-  }
-
-  .filter-modal .filter-group {
-    min-width: 100%;
-    margin-bottom: 16px;
-  }
-
-  .filter-modal-actions {
-    display: flex;
-    gap: 12px;
-    margin-top: 20px;
-    padding-top: 16px;
-    border-top: 1px solid var(--border);
-  }
-
-  .filter-modal-actions .btn-filter { flex: 1; text-align: center; }
-  .filter-modal-actions .btn-clear { flex: 0; }
-
-  .filter-group {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    flex: 1;
-    min-width: 150px;
-  }
-
-  .filter-group label {
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--text-muted);
-    font-weight: 600;
-  }
-
-  .filter-group select {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    color: var(--text-primary);
-    padding: 10px 14px;
-    border-radius: var(--radius);
-    font-family: inherit;
-    font-size: 0.9rem;
-    transition: border-color var(--transition);
-    outline: none;
-    width: 100%;
-  }
-
-  .filter-group select:focus { border-color: var(--accent); }
-
-  .filter-actions {
-    display: flex;
-    gap: 8px;
-    align-items: flex-end;
-    padding-top: 18px;
-  }
-
-  .btn-filter {
-    padding: 10px 24px;
-    background: var(--accent);
-    color: var(--bg-primary);
-    border: none;
-    border-radius: var(--radius);
-    font-family: inherit;
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all var(--transition);
-    white-space: nowrap;
-  }
-
+  .error-state { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+  .error-state h3 { font-family: 'Times New Roman', Times, serif; color: var(--text-secondary); margin-bottom: 8px; }
+  .error-state a { color: var(--accent); text-decoration: none; }
+
+  .search-bar { display: flex; gap: 12px; margin: 16px 0 12px; align-items: center; }
+  .search-input { flex: 1; background: var(--bg-secondary); border: 1px solid var(--border); color: var(--text-primary); padding: 12px 16px 12px 44px; border-radius: var(--radius-lg); font-family: inherit; font-size: 0.95rem; outline: none; transition: border-color var(--transition); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: 14px center; }
+
+  .filter-bar { display: flex; flex-wrap: wrap; gap: 12px; padding: 20px 24px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius-lg); margin: 0 0 24px; align-items: center; }
+  .filter-group { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 150px; }
+  .filter-group label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); font-weight: 600; }
+  .filter-group select { background: var(--bg-card); border: 1px solid var(--border); color: var(--text-primary); padding: 10px 14px; border-radius: var(--radius); font-family: inherit; font-size: 0.9rem; outline: none; width: 100%; }
+
+  .btn-filter { padding: 10px 24px; background: var(--accent); color: var(--bg-primary); border: none; border-radius: var(--radius); font-family: inherit; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all var(--transition); white-space: nowrap; }
   .btn-filter:hover { background: var(--accent-hover); }
 
-  .btn-clear {
-    padding: 10px 16px;
-    background: transparent;
-    color: var(--text-secondary);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    font-family: inherit;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: all var(--transition);
-    white-space: nowrap;
-  }
+  /* ─── MODALS ─── */
+  .detail-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; opacity: 0; transition: opacity 0.3s ease; backdrop-filter: blur(4px); }
+  .detail-overlay.open { display: block; opacity: 1; }
+  .detail-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95); background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 16px; z-index: 2001; width: 92%; max-width: 780px; max-height: 90vh; overflow-y: auto; display: none; opacity: 0; transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.4,0,0.2,1); }
+  .detail-modal.open { display: block; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  .detail-modal-close { position: absolute; top: 12px; right: 12px; z-index: 10; background: rgba(0,0,0,0.6); border: none; color: #fff; width: 36px; height: 36px; border-radius: 50%; font-size: 1.3rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
-  .btn-clear:hover {
-    border-color: var(--text-secondary);
-    color: var(--text-primary);
-  }
-
-  /* ─── LAYOUT: MAP + CARDS ─── */
-  .listings-layout {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-    margin-bottom: 48px;
-  }
-
-  /* ─── MAP ─── */
-  .map-container {
-    position: sticky;
-    top: 24px;
-    height: calc(100vh - 48px);
-    max-height: 700px;
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    border: 1px solid var(--border);
-  }
-
+  /* ─── LAYOUT ─── */
+  .listings-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 48px; }
+  .map-container { position: sticky; top: 24px; height: calc(100vh - 48px); max-height: 700px; border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border); }
   #map { width: 100%; height: 100%; }
 
-  .leaflet-container { background: var(--bg-secondary); }
-
-  .leaflet-popup-content-wrapper {
-    background: var(--bg-card) !important;
-    color: var(--text-primary) !important;
-    border-radius: var(--radius) !important;
-    box-shadow: var(--shadow) !important;
-    border: 1px solid var(--border) !important;
-  }
-
-  .leaflet-popup-tip { background: var(--bg-card) !important; }
-
-  .leaflet-popup-content {
-    margin: 12px 16px !important;
-    font-family: 'DM Sans', sans-serif !important;
-    line-height: 1.5 !important;
-  }
-
-  .popup-title { font-weight: 600; font-size: 0.95rem; margin-bottom: 4px; }
-  .popup-address { color: var(--text-secondary); font-size: 0.8rem; margin-bottom: 8px; }
-  .popup-price { color: var(--accent); font-weight: 700; font-size: 1.1rem; }
-  .popup-meta { display: flex; gap: 12px; margin-top: 4px; font-size: 0.78rem; color: var(--text-muted); }
-
-  .custom-marker {
-    background: var(--accent);
-    border: 2px solid #fff;
-    border-radius: 50%;
-    width: 14px;
-    height: 14px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
-    transition: transform 0.2s ease;
-  }
-
-  .custom-marker.active {
-    transform: scale(1.5);
-    background: #fff;
-    border-color: var(--accent);
-  }
-
-  /* ─── PROPERTY CARDS ─── */
-  .cards-container {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    max-height: calc(100vh - 48px);
-    overflow-y: auto;
-    padding-right: 8px;
-  }
-
+  .cards-container { display: flex; flex-direction: column; gap: 16px; max-height: calc(100vh - 48px); overflow-y: auto; padding-right: 8px; }
   .cards-container::-webkit-scrollbar { width: 4px; }
-  .cards-container::-webkit-scrollbar-track { background: transparent; }
   .cards-container::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
-  .property-card {
-    display: grid;
-    grid-template-columns: 220px 1fr;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    cursor: pointer;
-    transition: all var(--transition);
-  }
+  .property-card { display: grid; grid-template-columns: 220px 1fr; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; cursor: pointer; transition: all var(--transition); }
+  .property-card:hover { border-color: var(--accent); background: var(--bg-card-hover); transform: translateY(-2px); box-shadow: var(--shadow); }
+  .card-title { font-family: 'Times New Roman', Times, serif; font-size: 1.15rem; font-weight: 400; line-height: 1.3; margin-bottom: 4px; }
+  .card-body { padding: 20px 24px; display: flex; flex-direction: column; justify-content: space-between; }
+  .card-price { font-size: 1.3rem; font-weight: 700; color: var(--accent); }
 
-  .property-card:hover {
-    border-color: var(--accent);
-    background: var(--bg-card-hover);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow);
-  }
-
-  .property-card.active {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 1px var(--accent), var(--shadow);
-  }
-
-  .card-image {
-    width: 100%;
-    height: 100%;
-    min-height: 200px;
-    object-fit: cover;
-    background: var(--bg-secondary);
-  }
-
-  .card-image-placeholder {
-    width: 100%;
-    height: 100%;
-    min-height: 200px;
-    background: linear-gradient(135deg, var(--bg-secondary) 0%, #2a2f38 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-muted);
-    font-size: 0.8rem;
-  }
-
-  .card-image-placeholder svg {
-    width: 48px;
-    height: 48px;
-    opacity: 0.3;
-  }
-
-  /* ─── IMAGE GALLERY ─── */
-  .card-gallery {
-    position: relative;
-    width: 100%;
-    min-height: 200px;
-    overflow: hidden;
-    background: var(--bg-secondary);
-  }
-
-  .card-gallery img {
-    width: 100%;
-    height: 100%;
-    min-height: 200px;
-    object-fit: cover;
-    display: none;
-  }
-
-  .card-gallery img.active {
-    display: block;
-  }
-
-  .gallery-nav {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(0,0,0,0.55);
-    color: #fff;
-    border: none;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity var(--transition);
-    z-index: 2;
-  }
-
-  .card-gallery:hover .gallery-nav {
-    opacity: 1;
-  }
-
-  .gallery-nav.prev { left: 8px; }
-  .gallery-nav.next { right: 8px; }
-  .gallery-nav:hover { background: rgba(0,0,0,0.75); }
-
-  .gallery-dots {
-    position: absolute;
-    bottom: 8px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 5px;
-    z-index: 2;
-  }
-
-  .gallery-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.4);
-    transition: background var(--transition);
-  }
-
-  .gallery-dot.active {
-    background: #fff;
-  }
-
-  .gallery-count {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    background: rgba(0,0,0,0.6);
-    color: #fff;
-    font-size: 11px;
-    padding: 2px 8px;
-    border-radius: 10px;
-    z-index: 2;
-  }
-
-  .card-body {
-    padding: 20px 24px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-
-  .card-type {
-    display: inline-block;
-    padding: 3px 10px;
-    background: var(--accent-dim);
-    color: var(--accent);
-    border-radius: 4px;
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-weight: 600;
-    margin-bottom: 10px;
-  }
-
-  .card-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.15rem;
-    font-weight: 600;
-    line-height: 1.3;
-    margin-bottom: 4px;
-  }
-
-  .card-address {
-    color: var(--text-secondary);
-    font-size: 0.85rem;
-    margin-bottom: 12px;
-  }
-
-  .card-description {
-    color: var(--text-muted);
-    font-size: 0.82rem;
-    line-height: 1.5;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    margin-bottom: 16px;
-  }
-
-  .card-bottom {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-  }
-
-  .card-price {
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: var(--accent);
-  }
-
-  .card-price span {
-    font-size: 0.78rem;
-    font-weight: 400;
-    color: var(--text-muted);
-  }
-
-  .card-meta { display: flex; gap: 16px; }
-
-  .meta-item { text-align: right; }
-  .meta-value { font-size: 0.95rem; font-weight: 600; }
-  .meta-label { font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
-
-  .card-status { display: inline-flex; align-items: center; gap: 5px; font-size: 0.75rem; font-weight: 500; margin-top: 10px; }
-  .card-status.available { color: var(--green); }
-  .card-status.coming-soon { color: var(--accent); }
-
-  .status-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
-  .available .status-dot { background: var(--green); }
-  .coming-soon .status-dot { background: var(--accent); }
-
-  .card-cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    color: var(--accent);
-    font-size: 0.82rem;
-    font-weight: 600;
-    text-decoration: none;
-    margin-top: 12px;
-    transition: gap var(--transition);
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    font-family: inherit;
-  }
-
-  .card-cta:hover { gap: 10px; }
-
-  /* ─── NO RESULTS ─── */
-  .no-results {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 60px 20px;
-    color: var(--text-muted);
-  }
-
-  .no-results h3 {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.4rem;
-    color: var(--text-secondary);
-    margin-bottom: 8px;
-  }
-
-  /* ─── NO VACANCIES ─── */
-  .no-vacancies {
-    text-align: center;
-    padding: 80px 20px;
-  }
-
-  .no-vacancies h2 {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.8rem;
-    margin-bottom: 12px;
-  }
-
-  .no-vacancies p {
-    color: var(--text-secondary);
-    max-width: 500px;
-    margin: 0 auto 24px;
-  }
-
-  .no-vacancies a {
-    display: inline-block;
-    padding: 12px 32px;
-    background: var(--accent);
-    color: var(--bg-primary);
-    border-radius: var(--radius);
-    text-decoration: none;
-    font-weight: 600;
-    transition: background var(--transition);
-  }
-
-  .no-vacancies a:hover { background: var(--accent-hover); }
-
-  /* ─── RESPONSIVE ─── */
   @media (max-width: 1024px) {
     .listings-layout { grid-template-columns: 1fr; }
     .map-container { position: relative; top: 0; height: 400px; max-height: 400px; }
@@ -1006,252 +160,76 @@
   }
 
   @media (max-width: 768px) {
+    .container { padding-top: 60px; }
+    .app-header-title { font-size: 2.8rem; }
     .filter-bar { display: none !important; }
     .mobile-filter-btn { display: flex; }
     .property-card { grid-template-columns: 1fr; }
-    .card-image, .card-image-placeholder, .card-gallery, .card-gallery img { min-height: 180px; max-height: 200px; }
   }
-
-  /* ─── ANIMATIONS ─── */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .property-card { animation: fadeUp 0.4s ease both; }
-  .property-card:nth-child(2) { animation-delay: 0.05s; }
-  .property-card:nth-child(3) { animation-delay: 0.1s; }
-  .property-card:nth-child(4) { animation-delay: 0.15s; }
-  .property-card:nth-child(5) { animation-delay: 0.2s; }
-  .property-card:nth-child(6) { animation-delay: 0.25s; }
 </style>
 </head>
 <body>
 
 <div class="container">
-  <!-- Stale data warning banner -->
+  <div class="app-header">
+    <div class="app-header-eyebrow">
+      <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="4" cy="4" r="2.5"/><circle cx="12" cy="4" r="2.5"/><circle cx="20" cy="4" r="2.5"/>
+        <circle cx="4" cy="12" r="2.5"/><circle cx="12" cy="12" r="2.5"/><circle cx="20" cy="12" r="2.5"/>
+        <circle cx="4" cy="20" r="2.5"/><circle cx="12" cy="20" r="2.5"/><circle cx="20" cy="20" r="2.5"/>
+      </svg>
+      Serving the Charlotte Metro Area
+    </div>
+    <h1 class="app-header-title">Commercial Properties for Lease</h1>
+    <p class="app-header-description">
+      <strong>GreyRock Commercial Real Estate</strong> provides full-service commercial property management, leasing, and investment support throughout the greater Charlotte metro area. We help owners protect their assets, reduce operational stress, and maximize long-term performance across retail, office, industrial, and mixed-use properties.
+    </p>
+  </div>
+
   <div class="stale-banner" id="staleBanner">
     ⚠️ Listings may not reflect the latest availability.
     <a href="https://greyrockcommercial.appfolio.com/listings" target="_blank">View all listings on AppFolio →</a>
   </div>
 
-  <div class="listings-count" id="listingsCount" style="display:none;"></div>
+  <div class="loading-state" id="loadingState"><div class="loading-spinner"></div><p>Loading available properties...</p></div>
+  <div class="error-state" id="errorState" style="display:none;"><h3>Unable to Load Listings</h3><p>Please visit <a href="https://greyrockcommercial.appfolio.com/listings" target="_blank">our AppFolio page</a>.</p></div>
 
-  <!-- Loading state -->
-  <div class="loading-state" id="loadingState">
-    <div class="loading-spinner"></div>
-    <p>Loading available properties...</p>
-  </div>
-
-  <!-- Error state (hidden by default) -->
-  <div class="error-state" id="errorState" style="display:none;">
-    <h3>Unable to Load Listings</h3>
-    <p>Please visit <a href="https://greyrockcommercial.appfolio.com/listings" target="_blank">our AppFolio page</a> to view current availability, or <a href="https://www.greyrockcre.com/contact">contact us</a> directly.</p>
-  </div>
-
-  <!-- No vacancies state (hidden by default) -->
-  <div class="no-vacancies" id="noVacancies" style="display:none;">
-    <h2>No Properties Currently Available</h2>
-    <p>We don't have any vacancies right now, but availability changes frequently. Contact our team to discuss upcoming spaces or to be added to our waitlist.</p>
-    <a href="https://www.greyrockcre.com/contact">Contact Our Team</a>
-  </div>
-
-  <!-- Search Bar + Mobile Filter Toggle -->
   <div class="search-bar" id="searchBar" style="display:none;">
     <input type="text" class="search-input" id="searchInput" placeholder="Search by address, name, or description...">
-    <button class="mobile-filter-btn" id="mobileFilterBtn">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/></svg>
-      Filters
-      <span class="filter-badge" id="filterBadge">0</span>
-    </button>
+    <button class="mobile-filter-btn" id="mobileFilterBtn">Filters</button>
   </div>
 
-  <!-- Filter Bar — desktop only (hidden on mobile via CSS) -->
   <div class="filter-bar" id="filterBar" style="display:none;">
-    <div class="filter-group">
-      <label>Property Type</label>
-      <select id="filterType">
-        <option value="">All Types</option>
-      </select>
-    </div>
-    <div class="filter-group">
-      <label>Min Price</label>
-      <select id="filterMinPrice">
-        <option value="">No Min</option>
-        <option value="500">$500/mo</option>
-        <option value="1000">$1,000/mo</option>
-        <option value="2000">$2,000/mo</option>
-        <option value="3000">$3,000/mo</option>
-        <option value="5000">$5,000/mo</option>
-      </select>
-    </div>
-    <div class="filter-group">
-      <label>Max Price</label>
-      <select id="filterMaxPrice">
-        <option value="">No Max</option>
-        <option value="2000">$2,000/mo</option>
-        <option value="3000">$3,000/mo</option>
-        <option value="5000">$5,000/mo</option>
-        <option value="10000">$10,000/mo</option>
-        <option value="20000">$20,000+/mo</option>
-      </select>
-    </div>
-    <div class="filter-group">
-      <label>Min Sq Ft</label>
-      <select id="filterSqFt">
-        <option value="">Any Size</option>
-        <option value="500">500+ sq ft</option>
-        <option value="1000">1,000+ sq ft</option>
-        <option value="2500">2,500+ sq ft</option>
-        <option value="5000">5,000+ sq ft</option>
-        <option value="10000">10,000+ sq ft</option>
-      </select>
-    </div>
-    <div class="filter-group">
-      <label>City</label>
-      <select id="filterCity">
-        <option value="">All Cities</option>
-      </select>
-    </div>
-    <div class="filter-actions">
-      <button class="btn-filter" id="applyFilters">Search</button>
-      <button class="btn-clear" id="clearFilters">Clear</button>
-    </div>
+    <div class="filter-group"><label>Property Type</label><select id="filterType"><option value="">All Types</option></select></div>
+    <div class="filter-group"><label>Min Price</label><select id="filterMinPrice"><option value="">No Min</option><option value="500">$500/mo</option><option value="1000">$1,000/mo</option><option value="2000">$2,000/mo</option></select></div>
+    <div class="filter-group"><label>City</label><select id="filterCity"><option value="">All Cities</option></select></div>
+    <div class="filter-actions"><button class="btn-filter" id="applyFilters">Search</button></div>
   </div>
 
-  <!-- Detail Modal -->
-  <div class="detail-overlay" id="detailOverlay"></div>
-  <div class="detail-modal" id="detailModal">
-    <button class="detail-modal-close" id="detailModalClose">&times;</button>
-    <div id="detailContent"></div>
-  </div>
-
-  <!-- Mobile Filter Modal -->
-  <div class="filter-overlay" id="filterOverlay"></div>
-  <div class="filter-modal" id="filterModal">
-    <div class="filter-modal-header">
-      <h3>Filter Properties</h3>
-      <button class="filter-modal-close" id="filterModalClose">&times;</button>
-    </div>
-    <div class="filter-group">
-      <label>Property Type</label>
-      <select id="mFilterType"><option value="">All Types</option></select>
-    </div>
-    <div class="filter-group">
-      <label>Min Price</label>
-      <select id="mFilterMinPrice">
-        <option value="">No Min</option>
-        <option value="500">$500/mo</option>
-        <option value="1000">$1,000/mo</option>
-        <option value="2000">$2,000/mo</option>
-        <option value="3000">$3,000/mo</option>
-        <option value="5000">$5,000/mo</option>
-      </select>
-    </div>
-    <div class="filter-group">
-      <label>Max Price</label>
-      <select id="mFilterMaxPrice">
-        <option value="">No Max</option>
-        <option value="2000">$2,000/mo</option>
-        <option value="3000">$3,000/mo</option>
-        <option value="5000">$5,000/mo</option>
-        <option value="10000">$10,000/mo</option>
-        <option value="20000">$20,000+/mo</option>
-      </select>
-    </div>
-    <div class="filter-group">
-      <label>Min Sq Ft</label>
-      <select id="mFilterSqFt">
-        <option value="">Any Size</option>
-        <option value="500">500+ sq ft</option>
-        <option value="1000">1,000+ sq ft</option>
-        <option value="2500">2,500+ sq ft</option>
-        <option value="5000">5,000+ sq ft</option>
-        <option value="10000">10,000+ sq ft</option>
-      </select>
-    </div>
-    <div class="filter-group">
-      <label>City</label>
-      <select id="mFilterCity"><option value="">All Cities</option></select>
-    </div>
-    <div class="filter-modal-actions">
-      <button class="btn-clear" id="mClearFilters">Clear</button>
-      <button class="btn-filter" id="mApplyFilters">Show Results</button>
-    </div>
-  </div>
-
-  <!-- Map + Cards Layout (hidden until data loads) -->
   <div class="listings-layout" id="listingsLayout" style="display:none;">
-    <div class="map-container">
-      <div id="map"></div>
-    </div>
+    <div class="map-container"><div id="map"></div></div>
     <div class="cards-container" id="cardsContainer"></div>
   </div>
 </div>
 
+<div class="detail-overlay" id="detailOverlay"></div>
+<div class="detail-modal" id="detailModal">
+  <button class="detail-modal-close" id="detailModalClose">&times;</button>
+  <div id="detailContent"></div>
+</div>
+
 <script>
-// ╔══════════════════════════════════════════════════════════════════════════════╗
-// ║  CONFIGURATION — Update these when you set up your GitHub repo             ║
-// ╚══════════════════════════════════════════════════════════════════════════════╝
-
-// ⬇️ CHANGE THIS to your GitHub Pages URL after setup
 const DATA_URL = 'https://jaredflood.github.io/greyrock-listings/listings.json';
-// Example after GitHub Pages setup:
-// const DATA_URL = 'https://YOUR_USERNAME.github.io/greyrock-listings/listings.json';
-
-const STALE_THRESHOLD_HOURS = 2;  // Show banner if data is older than this
-const APPFOLIO_FALLBACK = 'https://greyrockcommercial.appfolio.com/listings';
-
-// ─── GLOBAL STATE ──────────────────────────────────────────────────────────────
 let LISTINGS = [];
 let map, markers = {}, activeCardId = null;
 
-// ─── DATA FETCHING ─────────────────────────────────────────────────────────────
-
 async function loadListings() {
   try {
-    const response = await fetch(DATA_URL + '?t=' + Date.now()); // cache-bust
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    
+    const response = await fetch(DATA_URL + '?t=' + Date.now());
     const data = await response.json();
-    
-    // Check data freshness
-    if (data.meta?.lastUpdated) {
-      const updated = new Date(data.meta.lastUpdated);
-      const hoursAgo = (Date.now() - updated.getTime()) / (1000 * 60 * 60);
-      
-      if (hoursAgo > STALE_THRESHOLD_HOURS) {
-        document.getElementById('staleBanner').classList.add('visible');
-      }
-    }
-
-    // Handle no vacancies
-    if (data.meta?.noVacancies || data.listings.length === 0) {
-      showNoVacancies();
-      return;
-    }
-
     LISTINGS = data.listings;
     initializeUI();
-    
-  } catch (err) {
-    console.error('Failed to load listings:', err);
-    showError();
-  }
-}
-
-// ─── UI STATE MANAGEMENT ───────────────────────────────────────────────────────
-
-function showNoVacancies() {
-  document.getElementById('loadingState').style.display = 'none';
-  document.getElementById('noVacancies').style.display = 'block';
-  document.getElementById('listingsCount').textContent = 'No Current Vacancies';
-}
-
-function showError() {
-  document.getElementById('loadingState').style.display = 'none';
-  document.getElementById('errorState').style.display = 'block';
-  document.getElementById('listingsCount').textContent = 'Unable to Load';
+  } catch (err) { showError(); }
 }
 
 function initializeUI() {
@@ -1259,467 +237,66 @@ function initializeUI() {
   document.getElementById('searchBar').style.display = 'flex';
   document.getElementById('filterBar').style.display = 'flex';
   document.getElementById('listingsLayout').style.display = 'grid';
-
-  // Populate dynamic filter options
   populateFilters();
-  
-  // Initialize map
   initMap();
-  
-  // Render
   renderCards(LISTINGS);
   renderMarkers(LISTINGS);
 }
 
-function populateFilters() {
-  // Property types
-  const types = [...new Set(LISTINGS.map(l => l.type).filter(Boolean))].sort();
-  ['filterType', 'mFilterType'].forEach(id => {
-    const sel = document.getElementById(id);
-    types.forEach(t => {
-      const opt = document.createElement('option');
-      opt.value = t;
-      opt.textContent = t;
-      sel.appendChild(opt);
-    });
-  });
-
-  // Cities
-  const cities = [...new Set(LISTINGS.map(l => l.city).filter(Boolean))].sort();
-  ['filterCity', 'mFilterCity'].forEach(id => {
-    const sel = document.getElementById(id);
-    cities.forEach(c => {
-      const opt = document.createElement('option');
-      opt.value = c;
-      opt.textContent = c;
-      sel.appendChild(opt);
-    });
-  });
-}
-
-// ─── MAP SETUP ─────────────────────────────────────────────────────────────────
-
 function initMap() {
-  map = L.map('map', { zoomControl: true, scrollWheelZoom: true }).setView([35.32, -80.85], 10);
-
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>',
-    subdomains: 'abcd',
-    maxZoom: 19
-  }).addTo(map);
+  map = L.map('map', { zoomControl: true }).setView([35.32, -80.85], 10);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
 }
-
-function createIcon(active = false) {
-  return L.divIcon({
-    className: 'custom-marker' + (active ? ' active' : ''),
-    iconSize: [14, 14],
-    iconAnchor: [7, 7],
-    popupAnchor: [0, -10]
-  });
-}
-
-// ─── RENDER FUNCTIONS ──────────────────────────────────────────────────────────
 
 function renderCards(listings) {
   const container = document.getElementById('cardsContainer');
-  const countEl = document.getElementById('listingsCount');
-
-  if (listings.length === 0) {
-    container.innerHTML = `
-      <div class="no-results">
-        <h3>No Properties Found</h3>
-        <p>Try adjusting your filters or clearing the search.</p>
-      </div>`;
-    countEl.textContent = '0 Properties Found';
-    return;
-  }
-
-  countEl.textContent = `${listings.length} Available Propert${listings.length === 1 ? 'y' : 'ies'}`;
-
-  container.innerHTML = listings.map(l => {
-    const rent = l.rent ? `$${l.rent.toLocaleString()}` : 'Contact';
-    const perSF = (l.rent && l.sqft) ? `$${(l.rent / l.sqft * 12).toFixed(2)}` : '—';
-    const sqftDisplay = l.sqft ? l.sqft.toLocaleString() : '—';
-    const imageHTML = l.imageUrl 
-      ? (l.imageUrls && l.imageUrls.length > 1
-        ? `<div class="card-gallery" data-index="0">
-             ${l.imageUrls.map((url, i) => `<img src="${url}" alt="${l.title}" loading="lazy" class="${i === 0 ? 'active' : ''}">`).join('')}
-             <button class="gallery-nav prev" onclick="event.stopPropagation(); galleryNav(this, -1)">‹</button>
-             <button class="gallery-nav next" onclick="event.stopPropagation(); galleryNav(this, 1)">›</button>
-             <div class="gallery-dots">${l.imageUrls.map((_, i) => `<span class="gallery-dot${i === 0 ? ' active' : ''}"></span>`).join('')}</div>
-             <span class="gallery-count">1/${l.imageUrls.length}</span>
-           </div>`
-        : `<img class="card-image" src="${l.imageUrl}" alt="${l.title}" loading="lazy">`)
-      : `<div class="card-image-placeholder">
-           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-             <rect x="3" y="3" width="18" height="18" rx="2"/>
-             <path d="M3 9h18M9 3v18"/>
-             <circle cx="15" cy="15" r="2"/>
-           </svg>
-         </div>`;
-
-    return `
-    <div class="property-card" data-id="${l.id}" onclick="openDetail('${l.id}')">
-      ${imageHTML}
+  container.innerHTML = listings.map(l => `
+    <div class="property-card" onclick="openDetail('${l.id}')">
+      <img class="card-image" src="${l.imageUrl || ''}" loading="lazy">
       <div class="card-body">
-        <div class="card-top">
-          <span class="card-type">${l.type || 'Commercial'}</span>
+        <div>
           <div class="card-title">${l.title}</div>
-          <div class="card-address">${l.address || ''}</div>
-          <div class="card-description">${l.description || ''}</div>
+          <div style="font-size:0.85rem; color:var(--text-secondary);">${l.address || ''}</div>
         </div>
-        <div class="card-bottom">
-          <div>
-            <div class="card-price">${rent} <span>/mo</span></div>
-            <div class="card-status ${l.status || 'available'}">
-              <span class="status-dot"></span>
-              ${l.status === 'available' ? 'Available Now' : 'Available ' + (l.available || '')}
-            </div>
-          </div>
-          <div class="card-meta">
-            <div class="meta-item">
-              <div class="meta-value">${sqftDisplay}</div>
-              <div class="meta-label">Sq Ft</div>
-            </div>
-            <div class="meta-item">
-              <div class="meta-value">${perSF}</div>
-              <div class="meta-label">$/SF/YR</div>
-            </div>
-          </div>
-        </div>
-        <button class="card-cta" onclick="event.stopPropagation(); openDetail('${l.id}')">
-          View Details
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </button>
+        <div class="card-price">$${l.rent?.toLocaleString() || 'Contact'} <span>/mo</span></div>
       </div>
-    </div>`;
-  }).join('');
+    </div>`).join('');
 }
 
 function renderMarkers(listings) {
   Object.values(markers).forEach(m => map.removeLayer(m));
-  markers = {};
-  const bounds = [];
-
   listings.forEach(l => {
     if (!l.lat || !l.lng) return;
-
-    const rent = l.rent ? `$${l.rent.toLocaleString()}/mo` : 'Contact';
-    const marker = L.marker([l.lat, l.lng], { icon: createIcon() })
-      .addTo(map)
-      .bindPopup(`
-        <div class="popup-title">${l.title}</div>
-        <div class="popup-address">${l.address || ''}</div>
-        <div class="popup-price">${rent}</div>
-        <div class="popup-meta">
-          <span>${l.sqft ? l.sqft.toLocaleString() + ' sq ft' : ''}</span>
-          <span>${l.type || ''}</span>
-        </div>
-        <a href="#" onclick="event.preventDefault(); openDetail('${l.id}')" style="display:inline-block;margin-top:8px;color:var(--accent);font-size:0.82rem;font-weight:600;text-decoration:none;">View Details →</a>
-      `, { closeButton: false });
-
-    marker.on('click', () => highlightProperty(l.id));
+    const marker = L.marker([l.lat, l.lng]).addTo(map).bindPopup(l.title);
     markers[l.id] = marker;
-    bounds.push([l.lat, l.lng]);
-  });
-
-  if (bounds.length > 0) {
-    map.fitBounds(bounds, { padding: [40, 40], maxZoom: 12 });
-  }
-}
-
-function galleryNav(btn, direction) {
-  const gallery = btn.closest('.card-gallery');
-  const imgs = gallery.querySelectorAll('img');
-  const dots = gallery.querySelectorAll('.gallery-dot');
-  const countEl = gallery.querySelector('.gallery-count');
-  let idx = parseInt(gallery.dataset.index || 0) + direction;
-  if (idx < 0) idx = imgs.length - 1;
-  if (idx >= imgs.length) idx = 0;
-  gallery.dataset.index = idx;
-  imgs.forEach((img, i) => img.classList.toggle('active', i === idx));
-  dots.forEach((dot, i) => dot.classList.toggle('active', i === idx));
-  if (countEl) countEl.textContent = `${idx + 1}/${imgs.length}`;
-}
-
-function highlightProperty(id) {
-  if (activeCardId) {
-    const prevCard = document.querySelector(`.property-card[data-id="${activeCardId}"]`);
-    if (prevCard) prevCard.classList.remove('active');
-    if (markers[activeCardId]) markers[activeCardId].setIcon(createIcon(false));
-  }
-
-  activeCardId = id;
-  const card = document.querySelector(`.property-card[data-id="${id}"]`);
-  if (card) {
-    card.classList.add('active');
-    card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }
-
-  if (markers[id]) {
-    markers[id].setIcon(createIcon(true));
-    markers[id].openPopup();
-    map.panTo(markers[id].getLatLng(), { animate: true });
-  }
-}
-
-// ─── FILTERS & SEARCH ─────────────────────────────────────────────────────────
-
-// Determine if we're reading from mobile modal or desktop bar
-function isMobile() {
-  return window.innerWidth <= 768;
-}
-
-function getFilterValues() {
-  const prefix = isMobile() ? 'm' : '';
-  const getId = (base) => prefix ? `${prefix}${base.charAt(0).toUpperCase() + base.slice(1)}` : base;
-  
-  return {
-    type: document.getElementById(isMobile() ? 'mFilterType' : 'filterType').value,
-    minPrice: parseInt(document.getElementById(isMobile() ? 'mFilterMinPrice' : 'filterMinPrice').value) || 0,
-    maxPrice: parseInt(document.getElementById(isMobile() ? 'mFilterMaxPrice' : 'filterMaxPrice').value) || Infinity,
-    minSqft: parseInt(document.getElementById(isMobile() ? 'mFilterSqFt' : 'filterSqFt').value) || 0,
-    city: document.getElementById(isMobile() ? 'mFilterCity' : 'filterCity').value,
-    search: document.getElementById('searchInput').value.trim().toLowerCase()
-  };
-}
-
-function countActiveFilters() {
-  const v = getFilterValues();
-  let count = 0;
-  if (v.type) count++;
-  if (v.minPrice > 0) count++;
-  if (v.maxPrice < Infinity) count++;
-  if (v.minSqft > 0) count++;
-  if (v.city) count++;
-  return count;
-}
-
-function updateFilterBadge() {
-  const count = countActiveFilters();
-  const badge = document.getElementById('filterBadge');
-  badge.textContent = count;
-  badge.classList.toggle('visible', count > 0);
-}
-
-function applyFilters() {
-  const v = getFilterValues();
-
-  const filtered = LISTINGS.filter(l => {
-    if (v.type && l.type !== v.type) return false;
-    if (l.rent && l.rent < v.minPrice) return false;
-    if (l.rent && l.rent > v.maxPrice) return false;
-    if (l.sqft && l.sqft < v.minSqft) return false;
-    if (v.city && l.city !== v.city) return false;
-    if (v.search) {
-      const hay = [l.title, l.address, l.city, l.type, l.description].filter(Boolean).join(' ').toLowerCase();
-      if (!hay.includes(v.search)) return false;
-    }
-    return true;
-  });
-
-  activeCardId = null;
-  renderCards(filtered);
-  renderMarkers(filtered);
-  updateFilterBadge();
-}
-
-function clearFilters() {
-  // Clear both desktop and mobile
-  ['filterType','filterMinPrice','filterMaxPrice','filterSqFt','filterCity',
-   'mFilterType','mFilterMinPrice','mFilterMaxPrice','mFilterSqFt','mFilterCity'].forEach(id => {
-    document.getElementById(id).value = '';
-  });
-  document.getElementById('searchInput').value = '';
-  activeCardId = null;
-  renderCards(LISTINGS);
-  renderMarkers(LISTINGS);
-  updateFilterBadge();
-}
-
-// Sync desktop → mobile and vice versa
-function syncFilters(fromMobile) {
-  const pairs = [
-    ['filterType', 'mFilterType'],
-    ['filterMinPrice', 'mFilterMinPrice'],
-    ['filterMaxPrice', 'mFilterMaxPrice'],
-    ['filterSqFt', 'mFilterSqFt'],
-    ['filterCity', 'mFilterCity']
-  ];
-  pairs.forEach(([desktop, mobile]) => {
-    if (fromMobile) {
-      document.getElementById(desktop).value = document.getElementById(mobile).value;
-    } else {
-      document.getElementById(mobile).value = document.getElementById(desktop).value;
-    }
   });
 }
-
-// ─── DETAIL MODAL ─────────────────────────────────────────────────────────────
 
 function openDetail(id) {
   const l = LISTINGS.find(x => x.id === id);
-  if (!l) return;
-
-  // Also highlight on map
-  highlightProperty(id);
-
-  const rent = l.rent ? `$${l.rent.toLocaleString()}` : 'Contact for Pricing';
-  const perSF = (l.rent && l.sqft) ? `$${(l.rent / l.sqft * 12).toFixed(2)}/SF/YR` : null;
-  const sqftDisplay = l.sqft ? `${l.sqft.toLocaleString()} SF` : null;
-
-  // Gallery HTML
-  let galleryHTML;
-  if (l.imageUrls && l.imageUrls.length > 1) {
-    galleryHTML = `
-      <div class="detail-gallery" data-index="0">
-        ${l.imageUrls.map((url, i) => `<img src="${url}" alt="${l.title}" class="${i === 0 ? 'active' : ''}">`).join('')}
-        <button class="gallery-nav prev" onclick="detailGalleryNav(-1)">‹</button>
-        <button class="gallery-nav next" onclick="detailGalleryNav(1)">›</button>
-        <div class="gallery-dots">${l.imageUrls.map((_, i) => `<span class="gallery-dot${i === 0 ? ' active' : ''}"></span>`).join('')}</div>
-        <span class="gallery-count">1/${l.imageUrls.length}</span>
-      </div>`;
-  } else if (l.imageUrl) {
-    galleryHTML = `<div class="detail-gallery"><img src="${l.imageUrl}" alt="${l.title}" class="active"></div>`;
-  } else {
-    galleryHTML = `<div class="detail-placeholder">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-        <rect x="3" y="3" width="18" height="18" rx="2"/>
-        <path d="M3 9h18M9 3v18"/>
-        <circle cx="15" cy="15" r="2"/>
-      </svg>
-    </div>`;
-  }
-
-  // Stats
-  const stats = [];
-  stats.push(`<div class="detail-stat"><div class="detail-stat-value">${rent}</div><div class="detail-stat-label">Monthly Rent</div></div>`);
-  if (sqftDisplay) stats.push(`<div class="detail-stat"><div class="detail-stat-value">${sqftDisplay}</div><div class="detail-stat-label">Square Feet</div></div>`);
-  if (perSF) stats.push(`<div class="detail-stat"><div class="detail-stat-value">${perSF}</div><div class="detail-stat-label">Price Per SF</div></div>`);
-
-  // Tags
-  const tags = [];
-  if (l.type) tags.push(l.type);
-  if (l.leaseType) tags.push(l.leaseType);
-  if (l.utilities) tags.push(l.utilities);
-
-  const statusText = l.status === 'available' ? 'Available Now' : `Available ${l.available || 'Soon'}`;
-  const statusClass = l.status || 'available';
-
   document.getElementById('detailContent').innerHTML = `
-    ${galleryHTML}
-    <div class="detail-content">
-      <span class="detail-type">${l.type || 'Commercial'}</span>
-      <div class="detail-title">${l.title}</div>
-      <div class="detail-address">${l.address || ''}${l.city ? ', ' + l.city : ''}</div>
-
-      <div class="detail-status ${statusClass}">
-        <span class="status-dot"></span>
-        ${statusText}
-      </div>
-
-      <div class="detail-stats">${stats.join('')}</div>
-
-      ${tags.length ? `<div class="detail-extras">${tags.map(t => `<span class="detail-tag">${t}</span>`).join('')}</div>` : ''}
-
-      ${l.description ? `
-        <div class="detail-section-heading">About This Property</div>
-        <div class="detail-description">${l.description}</div>
-      ` : ''}
-
-      <div class="detail-actions">
-        <a class="btn-primary" href="https://www.greyrockcre.com/contact" target="_blank">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          Contact Us About This Property
-        </a>
-        ${l.applyUrl ? `<a class="btn-secondary" href="${l.applyUrl}" target="_blank">Apply Online</a>` : ''}
-      </div>
-    </div>
-  `;
-
+    <img src="${l.imageUrl}" style="width:100%; height:300px; object-fit:cover;">
+    <div style="padding:24px;">
+      <h2 style="font-family:'Times New Roman', serif; font-size:2rem; margin-bottom:10px;">${l.title}</h2>
+      <p style="margin-bottom:20px;">${l.description}</p>
+      <a href="https://www.greyrockcre.com/contact" target="_blank" style="display:block; text-align:center; padding:15px; background:var(--accent); color:#000; text-decoration:none; font-weight:bold; border-radius:8px;">Contact Us</a>
+    </div>`;
   document.getElementById('detailOverlay').classList.add('open');
   document.getElementById('detailModal').classList.add('open');
-  document.body.style.overflow = 'hidden';
 }
 
-function closeDetail() {
+function populateFilters() {
+  const types = [...new Set(LISTINGS.map(l => l.type).filter(Boolean))].sort();
+  const sel = document.getElementById('filterType');
+  types.forEach(t => { const opt = document.createElement('option'); opt.value = t; opt.textContent = t; sel.appendChild(opt); });
+}
+
+document.getElementById('detailOverlay').onclick = () => {
   document.getElementById('detailOverlay').classList.remove('open');
   document.getElementById('detailModal').classList.remove('open');
-  document.body.style.overflow = '';
-}
+};
 
-function detailGalleryNav(dir) {
-  const gallery = document.querySelector('.detail-gallery');
-  if (!gallery) return;
-  const imgs = gallery.querySelectorAll('img');
-  const dots = gallery.querySelectorAll('.gallery-dot');
-  const count = gallery.querySelector('.gallery-count');
-  let idx = parseInt(gallery.dataset.index) || 0;
-  idx = (idx + dir + imgs.length) % imgs.length;
-  gallery.dataset.index = idx;
-  imgs.forEach((img, i) => img.classList.toggle('active', i === idx));
-  dots.forEach((dot, i) => dot.classList.toggle('active', i === idx));
-  if (count) count.textContent = `${idx + 1}/${imgs.length}`;
-}
-
-// ─── MOBILE FILTER MODAL ──────────────────────────────────────────────────────
-
-function openFilterModal() {
-  syncFilters(false); // desktop → mobile
-  document.getElementById('filterOverlay').classList.add('open');
-  document.getElementById('filterModal').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeFilterModal() {
-  document.getElementById('filterOverlay').classList.remove('open');
-  document.getElementById('filterModal').classList.remove('open');
-  document.body.style.overflow = '';
-}
-
-// ─── EVENT LISTENERS ───────────────────────────────────────────────────────────
-
-// Desktop filters
-document.getElementById('applyFilters').addEventListener('click', applyFilters);
-document.getElementById('clearFilters').addEventListener('click', clearFilters);
-document.querySelectorAll('.filter-bar select').forEach(el => {
-  el.addEventListener('change', applyFilters);
-});
-
-// Search input (debounced)
-let searchTimeout;
-document.getElementById('searchInput').addEventListener('input', () => {
-  clearTimeout(searchTimeout);
-  searchTimeout = setTimeout(applyFilters, 300);
-});
-
-// Detail modal
-document.getElementById('detailOverlay').addEventListener('click', closeDetail);
-document.getElementById('detailModalClose').addEventListener('click', closeDetail);
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') {
-    if (document.getElementById('detailModal').classList.contains('open')) closeDetail();
-    else if (document.getElementById('filterModal').classList.contains('open')) closeFilterModal();
-  }
-});
-
-// Mobile modal
-document.getElementById('mobileFilterBtn').addEventListener('click', openFilterModal);
-document.getElementById('filterOverlay').addEventListener('click', closeFilterModal);
-document.getElementById('filterModalClose').addEventListener('click', closeFilterModal);
-document.getElementById('mApplyFilters').addEventListener('click', () => {
-  syncFilters(true); // mobile → desktop
-  applyFilters();
-  closeFilterModal();
-});
-document.getElementById('mClearFilters').addEventListener('click', () => {
-  clearFilters();
-  closeFilterModal();
-});
-
-// ─── INIT ──────────────────────────────────────────────────────────────────────
 loadListings();
 </script>
-
 </body>
 </html>
