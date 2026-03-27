@@ -1,13 +1,13 @@
 {
   "meta": {
-    "lastUpdated": "2026-03-27T07:05:36.212Z",
+    "lastUpdated": "2026-03-27T08:51:52.213Z",
     "source": "https://greyrockcommercial.appfolio.com/listings",
     "listingCount": 1,
     "noVacancies": false,
     "previousCount": 1,
     "hasChanges": true,
-    "contentHash": "-y0hcly",
-    "scrapeDurationMs": 815,
+    "contentHash": "-94sjny",
+    "scrapeDurationMs": 4774,
     "warnings": [],
     "version": "2.0.0"
   },
@@ -51,8 +51,8 @@
       ],
       "detailUrl": "https://greyrockcommercial.appfolio.com/listings/detail/dc774453-9cf9-40d5-843f-2ac211f04f15",
       "applyUrl": "https://greyrockcommercial.appfolio.com/listings/rental_applications/new?listable_uid=dc774453-9cf9-40d5-843f-2ac211f04f15&source=Website",
-      "lat": 35.551758457644844,
-      "lng": -80.40442300776824
+      "lat": 35.550935335435454,
+      "lng": -80.40245693054601
     }
   ]
 }
