@@ -1,17 +1,51 @@
 {
   "meta": {
-    "lastUpdated": "2026-09-17T15:22:08.563Z",
+    "lastUpdated": "2026-09-17T19:07:49.959Z",
     "source": "https://greyrockcommercial.appfolio.com/listings",
-    "listingCount": 2,
+    "listingCount": 3,
     "noVacancies": false,
     "previousCount": 2,
     "hasChanges": true,
-    "contentHash": "-8skpa",
-    "scrapeDurationMs": 2533,
+    "contentHash": "p2xudk",
+    "scrapeDurationMs": 4715,
     "warnings": [],
     "version": "2.0.0"
   },
   "listings": [
+    {
+      "id": "75473018-bd95-4e11-9976-b673661e1fa2",
+      "title": "109 Professional Park Dr. - Suite 100, Mooresville, NC 28117\n    MAP",
+      "address": "109 Professional Park Dr. - Suite 100, Mooresville, NC 28117",
+      "city": "Mooresville",
+      "type": "Commercial",
+      "leaseType": "NNN",
+      "rent": 2190,
+      "sqft": 1010,
+      "rentPerSF": 26.02,
+      "description": "Now available for lease, this exceptional first-floor professional office suite offers approximately just over 1000 usable square feet in one of Mooresville's established business parks. The thoughtfully designed layout features a welcoming reception area and 2 private offices with tons of natural light. This is an excellent fit for a wide variety of professional office users.\n\nThe building offers ample parking, monument signage opportunities, and convenient proximity to I-77, Downtown Mooresville, and the greater Lake Norman business corridor.\n\nLease rates starting at $26.00 per square foot NNN, based on a 5 year lease term.\n\nFor additional information or to schedule a private tour, please contact GreyRock Commercial Real Estate at (704)707-4656.\n\nAdditional Information\nLease Rate: Starting at $26.00/SF NNN (Base Rent)\n2026 CAM: $4.75/RSF\n\n\nDisclaimer: The CAM amount is an estimate based on the current operating budget and is subject to annual reconciliation and adjustment in accordance with the lease.",
+      "available": "Now",
+      "status": "available",
+      "utilities": null,
+      "imageUrl": "https://images.cdn.appfolio.com/greyrockcommercial/images/11d27082-2e3f-4d30-969a-7b1709b42693/medium.jpg",
+      "imageUrls": [
+        "https://images.cdn.appfolio.com/greyrockcommercial/images/11d27082-2e3f-4d30-969a-7b1709b42693/medium.jpg",
+        "https://images.cdn.appfolio.com/greyrockcommercial/images/c405c5cc-ad16-41ff-b880-886dd32d0f5e/medium.jpg",
+        "https://images.cdn.appfolio.com/greyrockcommercial/images/044514e7-08de-487e-8856-38ec168bc861/medium.jpg",
+        "https://images.cdn.appfolio.com/greyrockcommercial/images/ebf39452-8dd7-43b4-be8d-bbd440fa291c/medium.jpg",
+        "https://images.cdn.appfolio.com/greyrockcommercial/images/5c650ac7-60c7-429b-84a5-4446ae87209f/medium.jpg",
+        "https://images.cdn.appfolio.com/greyrockcommercial/images/2b947c92-ea85-4bd7-9269-a89f5d25610a/medium.jpg",
+        "https://images.cdn.appfolio.com/greyrockcommercial/images/d282da9b-85ba-4978-9fb1-3379bdb569af/medium.jpg",
+        "https://images.cdn.appfolio.com/greyrockcommercial/images/64e7edf3-c4dc-4691-9b3b-5f934045c144/medium.jpg",
+        "https://images.cdn.appfolio.com/greyrockcommercial/images/26582dd7-9eae-4814-a94c-375c83d528e3/medium.jpg",
+        "https://images.cdn.appfolio.com/greyrockcommercial/images/564ccb60-0c3f-4e4c-b6df-63ccd8cf9ea9/medium.jpg",
+        "https://images.cdn.appfolio.com/greyrockcommercial/images/1d652699-4dd3-4f36-9bc6-6089815a3360/medium.jpg",
+        "https://images.cdn.appfolio.com/greyrockcommercial/images/3f92d88d-b718-4b8d-8f20-15f0870bbe11/medium.jpg"
+      ],
+      "detailUrl": "https://greyrockcommercial.appfolio.com/listings/detail/75473018-bd95-4e11-9976-b673661e1fa2",
+      "applyUrl": "https://greyrockcommercial.appfolio.com/listings/rental_applications/new?listable_uid=75473018-bd95-4e11-9976-b673661e1fa2&source=Website",
+      "lat": 35.58349133593555,
+      "lng": -80.80841127152128
+    },
     {
       "id": "a4c7f993-5d21-4f85-bc11-a05e9076ede2",
       "title": "109 Professional Park Dr. - Suite 200, Mooresville, NC 28117\n    MAP",
@@ -62,8 +96,8 @@
       ],
       "detailUrl": "https://greyrockcommercial.appfolio.com/listings/detail/a4c7f993-5d21-4f85-bc11-a05e9076ede2",
       "applyUrl": "https://greyrockcommercial.appfolio.com/listings/rental_applications/new?listable_uid=a4c7f993-5d21-4f85-bc11-a05e9076ede2&source=Website",
-      "lat": 35.58655374273263,
-      "lng": -80.81131084206399
+      "lat": 35.586282305117585,
+      "lng": -80.81238052967333
     },
     {
       "id": "dc774453-9cf9-40d5-843f-2ac211f04f15",
@@ -97,8 +131,8 @@
       ],
       "detailUrl": "https://greyrockcommercial.appfolio.com/listings/detail/dc774453-9cf9-40d5-843f-2ac211f04f15",
       "applyUrl": "https://greyrockcommercial.appfolio.com/listings/rental_applications/new?listable_uid=dc774453-9cf9-40d5-843f-2ac211f04f15&source=Website",
-      "lat": 35.55095244291494,
-      "lng": -80.40431743362252
+      "lat": 35.551342121000175,
+      "lng": -80.40204089983268
     }
   ]
 }
