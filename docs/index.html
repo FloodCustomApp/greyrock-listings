@@ -1101,7 +1101,10 @@ function initMap() {
   // (CARTO basemaps started requiring a key, which showed an "API KEY REQUIRED" watermark.)
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    maxZoom: 19
+    maxZoom: 19,
+    // OSM has no @2x tiles; on high-DPI screens fetch the next zoom level's
+    // tiles and show them at half size so the map stays sharp instead of blurry.
+    detectRetina: true
   }).addTo(map);
 }
 
