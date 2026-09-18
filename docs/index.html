@@ -978,12 +978,37 @@ let map, markers = {}, activeCardId = null;
 
 // ─── DATA FETCHING ─────────────────────────────────────────────────────────────
 
+// Try the configured DATA_URL first; if the network request itself fails
+// (blocked host, offline, etc.), retry once, then fall back to a relative
+// listings.json next to this page (works when hosted on GitHub Pages or
+// previewed with the docs/ folder served locally).
+async function fetchListingsData() {
+  const candidates = [DATA_URL];
+  const isAbsolute = /^https?:\/\//i.test(DATA_URL);
+  const sameOrigin = location.href.startsWith(DATA_URL.replace(/listings\.json$/, ''));
+  if (isAbsolute && !sameOrigin) candidates.push('listings.json');
+
+  let lastErr;
+  for (const url of candidates) {
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try {
+        const response = await fetch(url + '?t=' + Date.now()); // cache-bust
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return await response.json();
+      } catch (err) {
+        lastErr = err;
+        console.warn(`Listings fetch failed (${url}, attempt ${attempt + 1}):`, err);
+        if (/^HTTP 4\d\d$/.test(err.message)) break; // don't retry a 404/403
+        await new Promise(r => setTimeout(r, 800));
+      }
+    }
+  }
+  throw lastErr;
+}
+
 async function loadListings() {
   try {
-    const response = await fetch(DATA_URL + '?t=' + Date.now()); // cache-bust
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    
-    const data = await response.json();
+    const data = await fetchListingsData();
     
     // Check data freshness
     if (data.meta?.lastUpdated) {
