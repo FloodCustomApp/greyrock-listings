@@ -1097,14 +1097,24 @@ function populateFilters() {
 function initMap() {
   map = L.map('map', { zoomControl: true, scrollWheelZoom: true }).setView([35.32, -80.85], 10);
 
-  // OpenStreetMap standard tiles: no API key required.
+  // Esri "Light Gray Canvas": a minimal, low-detail basemap that needs no API key.
   // (CARTO basemaps started requiring a key, which showed an "API KEY REQUIRED" watermark.)
-  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  // Native tiles stop at zoom 16; Leaflet upscales them beyond that.
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Tiles &copy; <a href="https://www.esri.com/">Esri</a> &mdash; Esri, HERE, Garmin, &copy; OpenStreetMap contributors',
+    maxNativeZoom: 16,
     maxZoom: 19,
-    // OSM has no @2x tiles; on high-DPI screens fetch the next zoom level's
+    // Esri has no @2x tiles; on high-DPI screens fetch the next zoom level's
     // tiles and show them at half size so the map stays sharp instead of blurry.
     detectRetina: true
+  }).addTo(map);
+
+  // Matching label overlay (city names, major roads) so the map stays readable.
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}', {
+    maxNativeZoom: 16,
+    maxZoom: 19,
+    detectRetina: true,
+    pane: 'shadowPane' // sits above tiles, below markers
   }).addTo(map);
 }
 
