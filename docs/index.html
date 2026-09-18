@@ -453,6 +453,8 @@
   .property-card {
     display: grid;
     grid-template-columns: 220px 1fr;
+    /* Never let the scrolling list squeeze a card shorter than its content. */
+    flex-shrink: 0;
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
