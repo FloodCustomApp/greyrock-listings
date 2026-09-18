@@ -1105,6 +1105,13 @@ function initMap() {
     maxNativeZoom: 16,
     maxZoom: 19
   }).addTo(map);
+
+  // Matching label overlay (city names, major roads) so the map stays readable.
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}', {
+    maxNativeZoom: 16,
+    maxZoom: 19,
+    pane: 'shadowPane' // sits above tiles, below markers
+  }).addTo(map);
 }
 
 function createIcon(active = false) {
