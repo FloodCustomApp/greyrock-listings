@@ -8,6 +8,10 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Playfair+Display:wght@400;500;600;700&family=Wix+Madefor+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<!-- Vector basemap renderer (crisp on any screen) + Leaflet binding -->
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.css" />
+<script src="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.js"></script>
+<script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.1.4/leaflet-maplibre-gl.js"></script>
 <style>
   :root {
     --bg-primary: #0f1114;
@@ -1097,24 +1101,13 @@ function populateFilters() {
 function initMap() {
   map = L.map('map', { zoomControl: true, scrollWheelZoom: true }).setView([35.32, -80.85], 10);
 
-  // Esri "Light Gray Canvas": a minimal, low-detail basemap that needs no API key.
-  // (CARTO basemaps started requiring a key, which showed an "API KEY REQUIRED" watermark.)
-  // Native tiles stop at zoom 16; Leaflet upscales them beyond that.
-  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
-    attribution: 'Tiles &copy; <a href="https://www.esri.com/">Esri</a> &mdash; Esri, HERE, Garmin, &copy; OpenStreetMap contributors',
-    maxNativeZoom: 16,
-    maxZoom: 19,
-    // Esri has no @2x tiles; on high-DPI screens fetch the next zoom level's
-    // tiles and show them at half size so the map stays sharp instead of blurry.
-    detectRetina: true
-  }).addTo(map);
-
-  // Matching label overlay (city names, major roads) so the map stays readable.
-  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}', {
-    maxNativeZoom: 16,
-    maxZoom: 19,
-    detectRetina: true,
-    pane: 'shadowPane' // sits above tiles, below markers
+  // Vector basemap from OpenFreeMap (free, no API key). "Positron" is a
+  // light-gray style with labels; vector rendering stays crisp on any screen.
+  // (CARTO raster basemaps started requiring a key, which showed an
+  // "API KEY REQUIRED" watermark.)
+  L.maplibreGL({
+    style: 'https://tiles.openfreemap.org/styles/positron',
+    attribution: '<a href="https://openfreemap.org">OpenFreeMap</a> &copy; <a href="https://www.openmaptiles.org/">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
   }).addTo(map);
 }
 
