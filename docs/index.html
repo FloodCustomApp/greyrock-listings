@@ -1097,20 +1097,11 @@ function populateFilters() {
 function initMap() {
   map = L.map('map', { zoomControl: true, scrollWheelZoom: true }).setView([35.32, -80.85], 10);
 
-  // Esri "Light Gray Canvas": a minimal, low-detail basemap that needs no API key.
+  // OpenStreetMap standard tiles: no API key required.
   // (CARTO basemaps started requiring a key, which showed an "API KEY REQUIRED" watermark.)
-  // Native tiles stop at zoom 16; Leaflet upscales them beyond that.
-  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
-    attribution: 'Tiles &copy; <a href="https://www.esri.com/">Esri</a> &mdash; Esri, HERE, Garmin, &copy; OpenStreetMap contributors',
-    maxNativeZoom: 16,
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     maxZoom: 19
-  }).addTo(map);
-
-  // Matching label overlay (city names, major roads) so the map stays readable.
-  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}', {
-    maxNativeZoom: 16,
-    maxZoom: 19,
-    pane: 'shadowPane' // sits above tiles, below markers
   }).addTo(map);
 }
 
