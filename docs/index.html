@@ -8,6 +8,10 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Playfair+Display:wght@400;500;600;700&family=Wix+Madefor+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<!-- Vector basemap renderer (crisp on any screen) + Leaflet binding -->
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.css" />
+<script src="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.js"></script>
+<script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.1.4/leaflet-maplibre-gl.js"></script>
 <style>
   :root {
     --bg-primary: #0f1114;
@@ -449,6 +453,8 @@
   .property-card {
     display: grid;
     grid-template-columns: 220px 1fr;
+    /* Never let the scrolling list squeeze a card shorter than its content. */
+    flex-shrink: 0;
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
@@ -978,12 +984,37 @@ let map, markers = {}, activeCardId = null;
 
 // ─── DATA FETCHING ─────────────────────────────────────────────────────────────
 
+// Try the configured DATA_URL first; if the network request itself fails
+// (blocked host, offline, etc.), retry once, then fall back to a relative
+// listings.json next to this page (works when hosted on GitHub Pages or
+// previewed with the docs/ folder served locally).
+async function fetchListingsData() {
+  const candidates = [DATA_URL];
+  const isAbsolute = /^https?:\/\//i.test(DATA_URL);
+  const sameOrigin = location.href.startsWith(DATA_URL.replace(/listings\.json$/, ''));
+  if (isAbsolute && !sameOrigin) candidates.push('listings.json');
+
+  let lastErr;
+  for (const url of candidates) {
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try {
+        const response = await fetch(url + '?t=' + Date.now()); // cache-bust
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return await response.json();
+      } catch (err) {
+        lastErr = err;
+        console.warn(`Listings fetch failed (${url}, attempt ${attempt + 1}):`, err);
+        if (/^HTTP 4\d\d$/.test(err.message)) break; // don't retry a 404/403
+        await new Promise(r => setTimeout(r, 800));
+      }
+    }
+  }
+  throw lastErr;
+}
+
 async function loadListings() {
   try {
-    const response = await fetch(DATA_URL + '?t=' + Date.now()); // cache-bust
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    
-    const data = await response.json();
+    const data = await fetchListingsData();
     
     // Check data freshness
     if (data.meta?.lastUpdated) {
@@ -1072,10 +1103,13 @@ function populateFilters() {
 function initMap() {
   map = L.map('map', { zoomControl: true, scrollWheelZoom: true }).setView([35.32, -80.85], 10);
 
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>',
-    subdomains: 'abcd',
-    maxZoom: 19
+  // Vector basemap from OpenFreeMap (free, no API key). "Positron" is a
+  // light-gray style with labels; vector rendering stays crisp on any screen.
+  // (CARTO raster basemaps started requiring a key, which showed an
+  // "API KEY REQUIRED" watermark.)
+  L.maplibreGL({
+    style: 'https://tiles.openfreemap.org/styles/positron',
+    attribution: '<a href="https://openfreemap.org">OpenFreeMap</a> &copy; <a href="https://www.openmaptiles.org/">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
   }).addTo(map);
 }
 
