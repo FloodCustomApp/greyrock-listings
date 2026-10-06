@@ -1,17 +1,40 @@
 {
   "meta": {
-    "lastUpdated": "2026-10-06T16:59:17.096Z",
+    "lastUpdated": "2026-10-06T21:27:24.024Z",
     "source": "https://greyrockcommercial.appfolio.com/listings",
     "listingCount": 3,
     "noVacancies": false,
     "previousCount": 3,
     "hasChanges": true,
-    "contentHash": "-o7b7ci",
-    "scrapeDurationMs": 3873,
+    "contentHash": "2wj3k5",
+    "scrapeDurationMs": 3968,
     "warnings": [],
     "version": "2.0.0"
   },
   "listings": [
+    {
+      "id": "d161cedc-a2fc-48ad-9fc9-fa567e08bd61",
+      "title": "2300 S Cannon Blvd. - 2300 S Cannon Blvd., Kannapolis, NC 28083\n    MAP",
+      "address": "2300 S Cannon Blvd. - 2300 S Cannon Blvd., Kannapolis, NC 28083",
+      "city": "Kannapolis",
+      "type": "Commercial",
+      "leaseType": "Gross",
+      "rent": 3500,
+      "sqft": 2070,
+      "rentPerSF": null,
+      "description": "Come see this great opportunity for a commercial space on a busy road in Kannapolis. Previously a Chinese food restaurant, this space would be perfect for a new restaurant. This is a great location on a corner lot with a large parking lot and sits on Highway 29 close to I-85.\n\nProperty Highlights:\n\n-±2000 SF retail commercial space\n-Prominent Highway 29 frontage with excellent signage visibility\n-Consistent local traffic\n-Rear kitchen area perfect for a restaurant\n-Two restrooms\n-Brand new TPO Roof just installed\n\n\nTenant would be responsible for all utilities, lawn care and landscaping, parking lot, all HVAC repairs and routine maintenance and 50% of replacement of HVAC cost if needed, any interior/exterior upfit and painting, plate glass and doors, etc. \n\nLandlord will be responsible for roof, foundation, and structural aspects only.\n\nFor additional information or to schedule a private tour, please contact GreyRock Commercial Real Estate at (704)707-4656.\n\nRental Terms\nRent: $3,5000\nLease Type: Gross\nApplication Fee: $120\nAvailable Now",
+      "available": "Now",
+      "status": "available",
+      "utilities": null,
+      "imageUrl": "https://images.cdn.appfolio.com/greyrockcommercial/images/9d160651-a4a0-47d7-ac5f-ea65c71fcdb1/medium.jpg",
+      "imageUrls": [
+        "https://images.cdn.appfolio.com/greyrockcommercial/images/9d160651-a4a0-47d7-ac5f-ea65c71fcdb1/medium.jpg"
+      ],
+      "detailUrl": "https://greyrockcommercial.appfolio.com/listings/detail/d161cedc-a2fc-48ad-9fc9-fa567e08bd61",
+      "applyUrl": "https://greyrockcommercial.appfolio.com/listings/rental_applications/new?listable_uid=d161cedc-a2fc-48ad-9fc9-fa567e08bd61&source=Website",
+      "lat": 35.48769958097834,
+      "lng": -80.62085578675304
+    },
     {
       "id": "75473018-bd95-4e11-9976-b673661e1fa2",
       "title": "109 Professional Park Dr. - Suite 100, Mooresville, NC 28117\n    MAP",
@@ -43,8 +66,8 @@
       ],
       "detailUrl": "https://greyrockcommercial.appfolio.com/listings/detail/75473018-bd95-4e11-9976-b673661e1fa2",
       "applyUrl": "https://greyrockcommercial.appfolio.com/listings/rental_applications/new?listable_uid=75473018-bd95-4e11-9976-b673661e1fa2&source=Website",
-      "lat": 35.582708889622474,
-      "lng": -80.81125981922048
+      "lat": 35.5863003907979,
+      "lng": -80.80853926630127
     },
     {
       "id": "a4c7f993-5d21-4f85-bc11-a05e9076ede2",
@@ -96,43 +119,8 @@
       ],
       "detailUrl": "https://greyrockcommercial.appfolio.com/listings/detail/a4c7f993-5d21-4f85-bc11-a05e9076ede2",
       "applyUrl": "https://greyrockcommercial.appfolio.com/listings/rental_applications/new?listable_uid=a4c7f993-5d21-4f85-bc11-a05e9076ede2&source=Website",
-      "lat": 35.58258438771889,
-      "lng": -80.8118351267236
-    },
-    {
-      "id": "dc774453-9cf9-40d5-843f-2ac211f04f15",
-      "title": "206 E. Main St. - 206 E Main St., Rockwell, NC 28138\n    MAP",
-      "address": "206 E. Main St. - 206 E Main St., Rockwell, NC 28138",
-      "city": "Rockwell",
-      "type": "Commercial",
-      "leaseType": "Gross",
-      "rent": 2400,
-      "sqft": 3200,
-      "rentPerSF": 9,
-      "description": "Position your business in a highly visible location along busy Highway 52 in the heart of Rockwell. This ±3,200 SF retail storefront offers exceptional exposure to steady daily traffic and strong local foot presence, making it ideal for a wide range of retail, service, or specialty commercial uses.\n\nThe interior features a large open showroom floor that can easily adapt to your layout needs, complemented by a private rear office and three restrooms — providing flexibility for customer-facing operations, staff workspace, or multi-use concepts. The building layout supports retail, boutique fitness, professional services, studio space, specialty shops, and more.\n\nCustomers and staff will benefit from convenient parking options, including street parking in front of the building and dedicated parking located behind the property for easy access and operational functionality.\n\nProperty Highlights:\n\n-±3,200 SF retail commercial space\n-Prominent Highway 52 frontage with excellent signage visibility\n-Downtown location with consistent local traffic\n-Large open floor plan with flexible configuration potential\n-Rear private office area\n-Three restrooms\n-Street parking plus dedicated rear parking\n-Suitable for multiple business types\n-Gross Lease option available (simplified occupancy costs)\n\nA rare opportunity to establish or expand your business presence in one of the most visible corridors serving the greater Rowan County community.\n\nZoning: B-2 Central Business District – Town of Rockwell. Allows a variety of retail, office, service, and commercial uses. Prospective tenants should verify their specific intended use with the Town of Rockwell.",
-      "available": "Now",
-      "status": "available",
-      "utilities": null,
-      "imageUrl": "https://images.cdn.appfolio.com/greyrockcommercial/images/073dffd1-b375-4ad2-b39a-4a6edfae4230/medium.jpg",
-      "imageUrls": [
-        "https://images.cdn.appfolio.com/greyrockcommercial/images/073dffd1-b375-4ad2-b39a-4a6edfae4230/medium.jpg",
-        "https://images.cdn.appfolio.com/greyrockcommercial/images/4d920a9b-f36b-45eb-9664-3b54864d2dd9/medium.jpg",
-        "https://images.cdn.appfolio.com/greyrockcommercial/images/d4024ccd-6dae-42cf-813e-e181a59a86f1/medium.jpg",
-        "https://images.cdn.appfolio.com/greyrockcommercial/images/9739fddd-d3d1-49c0-88b0-ed0c80003708/medium.jpg",
-        "https://images.cdn.appfolio.com/greyrockcommercial/images/310289b9-4f76-4f85-8f28-ef17784b930b/medium.jpg",
-        "https://images.cdn.appfolio.com/greyrockcommercial/images/a51b003e-7dab-403d-81ce-2faf05c630d6/medium.jpg",
-        "https://images.cdn.appfolio.com/greyrockcommercial/images/00da94e9-ab9a-4ed1-9082-bb71970f9eef/medium.jpg",
-        "https://images.cdn.appfolio.com/greyrockcommercial/images/66da2609-9ecb-4981-8882-ec927f5f9de6/medium.jpg",
-        "https://images.cdn.appfolio.com/greyrockcommercial/images/c3f215b2-f2ae-4997-9d82-8b93934ac4a9/medium.jpg",
-        "https://images.cdn.appfolio.com/greyrockcommercial/images/8de1cbae-4154-4595-b1fd-5e4d1e7d125a/medium.jpg",
-        "https://images.cdn.appfolio.com/greyrockcommercial/images/f2fa5b52-41c7-4b96-9850-32c6d29aca51/medium.jpg",
-        "https://images.cdn.appfolio.com/greyrockcommercial/images/dcfdd321-4ae8-4e28-ac3a-82560919892e/medium.jpg",
-        "https://images.cdn.appfolio.com/greyrockcommercial/images/36b3b0e7-8197-4f15-87be-eb8c1ddd97e4/medium.jpg"
-      ],
-      "detailUrl": "https://greyrockcommercial.appfolio.com/listings/detail/dc774453-9cf9-40d5-843f-2ac211f04f15",
-      "applyUrl": "https://greyrockcommercial.appfolio.com/listings/rental_applications/new?listable_uid=dc774453-9cf9-40d5-843f-2ac211f04f15&source=Website",
-      "lat": 35.55144820138413,
-      "lng": -80.4038911976012
+      "lat": 35.58646946351752,
+      "lng": -80.80987407003721
     }
   ]
 }
