@@ -1,13 +1,13 @@
 {
   "meta": {
-    "lastUpdated": "2026-10-09T11:07:31.396Z",
+    "lastUpdated": "2026-10-09T17:14:35.744Z",
     "source": "https://greyrockcommercial.appfolio.com/listings",
     "listingCount": 3,
     "noVacancies": false,
     "previousCount": 3,
     "hasChanges": true,
-    "contentHash": "-8d1vae",
-    "scrapeDurationMs": 4141,
+    "contentHash": "8cpgzj",
+    "scrapeDurationMs": 3874,
     "warnings": [],
     "version": "2.0.0"
   },
@@ -22,7 +22,7 @@
       "rent": 3500,
       "sqft": 2070,
       "rentPerSF": null,
-      "description": "Come see this great opportunity for a commercial space on a busy road in Kannapolis. Previously a Chinese food restaurant, this space would be perfect for a new restaurant. This is a great location on a corner lot with a large parking lot and sits on Highway 29 close to I-85.\n\nProperty Highlights:\n\n-±2000 SF retail commercial space\n-Prominent Highway 29 frontage with excellent signage visibility\n-Consistent local traffic\n-Rear kitchen area perfect for a restaurant\n-Two restrooms\n-Brand new TPO Roof just installed\n\n\nTenant would be responsible for all utilities, lawn care and landscaping, parking lot, all HVAC repairs and routine maintenance and 50% of replacement of HVAC cost if needed, any interior/exterior upfit and painting, plate glass and doors, etc. \n\nLandlord will be responsible for roof, foundation, and structural aspects only.\n\nFor additional information or to schedule a private tour, please contact GreyRock Commercial Real Estate at (704)707-4656.\n\nRental Terms\nRent: $3,5000\nLease Type: Gross\nApplication Fee: $120\nAvailable Now",
+      "description": "Come see this great opportunity for a commercial space on a busy road in Kannapolis. Previously a Chinese food restaurant, this space would be perfect for a new restaurant. This is a great location on a corner lot with a large parking lot and sits on Highway 29 close to I-85.\n\nProperty Highlights:\n\n-±2000 SF retail commercial space\n-Prominent Highway 29 frontage with excellent signage visibility\n-Consistent local traffic\n-Rear kitchen area perfect for a restaurant\n-Two restrooms\n-Brand new TPO Roof just installed\n\nFor additional information or to schedule a private tour, please contact GreyRock Commercial Real Estate at (704)707-4656.\n\nRental Terms\nRent: $3,5000\nLease Type: Gross\nApplication Fee: $120\nAvailable Now",
       "available": "Now",
       "status": "available",
       "utilities": null,
@@ -48,8 +48,8 @@
       ],
       "detailUrl": "https://greyrockcommercial.appfolio.com/listings/detail/d161cedc-a2fc-48ad-9fc9-fa567e08bd61",
       "applyUrl": "https://greyrockcommercial.appfolio.com/listings/rental_applications/new?listable_uid=d161cedc-a2fc-48ad-9fc9-fa567e08bd61&source=Website",
-      "lat": 35.489353112499856,
-      "lng": -80.62116704469958
+      "lat": 35.48500557740962,
+      "lng": -80.62169776709023
     },
     {
       "id": "75473018-bd95-4e11-9976-b673661e1fa2",
@@ -82,8 +82,8 @@
       ],
       "detailUrl": "https://greyrockcommercial.appfolio.com/listings/detail/75473018-bd95-4e11-9976-b673661e1fa2",
       "applyUrl": "https://greyrockcommercial.appfolio.com/listings/rental_applications/new?listable_uid=75473018-bd95-4e11-9976-b673661e1fa2&source=Website",
-      "lat": 35.58244288344299,
-      "lng": -80.80946326311464
+      "lat": 35.58560838339916,
+      "lng": -80.81155344730048
     },
     {
       "id": "a4c7f993-5d21-4f85-bc11-a05e9076ede2",
@@ -135,8 +135,8 @@
       ],
       "detailUrl": "https://greyrockcommercial.appfolio.com/listings/detail/a4c7f993-5d21-4f85-bc11-a05e9076ede2",
       "applyUrl": "https://greyrockcommercial.appfolio.com/listings/rental_applications/new?listable_uid=a4c7f993-5d21-4f85-bc11-a05e9076ede2&source=Website",
-      "lat": 35.58245744196557,
-      "lng": -80.80813533239525
+      "lat": 35.58490439946053,
+      "lng": -80.8076044880565
     }
   ]
 }
