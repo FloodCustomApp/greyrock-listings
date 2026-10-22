@@ -1,17 +1,49 @@
 {
   "meta": {
-    "lastUpdated": "2026-10-22T15:44:06.961Z",
+    "lastUpdated": "2026-10-22T19:37:55.971Z",
     "source": "https://greyrockcommercial.appfolio.com/listings",
-    "listingCount": 3,
+    "listingCount": 4,
     "noVacancies": false,
     "previousCount": 3,
     "hasChanges": true,
-    "contentHash": "-3l44v4",
-    "scrapeDurationMs": 3942,
+    "contentHash": "340hks",
+    "scrapeDurationMs": 5776,
     "warnings": [],
     "version": "2.0.0"
   },
   "listings": [
+    {
+      "id": "12cfc941-0500-4ecd-9d6c-028f85d622f0",
+      "title": "2035 Wilshire Ct SW, Concord, NC 28025\n    MAP",
+      "address": "2035 Wilshire Ct SW, Concord, NC 28025",
+      "city": "Concord",
+      "type": "Commercial",
+      "leaseType": "Modified",
+      "rent": 2995,
+      "sqft": 2682,
+      "rentPerSF": 13.4,
+      "description": "Industrial / Flex Space for Lease – Prime Concord Location\n\n2035 Wilshire Court SW | Concord, NC 28025\n\nExcellent opportunity to lease a versatile 2,682 SF industrial/flex property situated on approximately 0.77 acres in an established Concord industrial area.\n\nPreviously occupied by a hydraulic and machinery repair business, this property offers a functional layout ideal for automotive-related services, equipment repair, contractors, light manufacturing, warehousing, and other permitted industrial uses.\n\nThe building features a spacious open workshop with three overhead garage doors, a customer reception/waiting area, two office spaces, and a bathroom. The property also offers a generous paved area for parking, vehicle access, and maneuverability.\n\nConveniently located near Highway 601, US-29, and the I-85 corridor, providing accessibility throughout Concord, Cabarrus County, and the greater Charlotte region.\n\nProperty Highlights:\n\n-2,682 SF industrial/flex building\n-Approximately 0.77-acre parcel\n-I-1 industrial zoning\n-Three overhead garage doors\n-Large open workshop/warehouse area\n-Reception/waiting area and two offices\n-One bathroom\n-Paved parking and vehicle maneuvering area\n-Steel-frame construction\n-Convenient access to major transportation corridors\n\nRental Terms\n\n-Monthly Rent: $2,995\n-Lease Type: Modified Gross\n-Application Fee: $120\n\nAvailable: December 1, 2026\n\nFor additional information or to schedule a private tour, contact GreyRock Commercial Real Estate at (704) 707-4656.\n\nAll proposed uses are subject to applicable zoning requirements and landlord approval.",
+      "available": "12/1/26",
+      "status": "coming-soon",
+      "utilities": null,
+      "imageUrl": "https://images.cdn.appfolio.com/greyrockcommercial/images/d6b8ca17-b8fa-46d0-9289-ac9bdb9c9d94/medium.jpg",
+      "imageUrls": [
+        "https://images.cdn.appfolio.com/greyrockcommercial/images/d6b8ca17-b8fa-46d0-9289-ac9bdb9c9d94/medium.jpg",
+        "https://images.cdn.appfolio.com/greyrockcommercial/images/909209a4-0728-489e-abdf-a00f605cd9a3/medium.jpg",
+        "https://images.cdn.appfolio.com/greyrockcommercial/images/0ddf4d31-cbe3-4fab-897f-a60968e64dd0/medium.jpg",
+        "https://images.cdn.appfolio.com/greyrockcommercial/images/2ea09e2b-d618-4460-8d14-a1bde6500da4/medium.jpg",
+        "https://images.cdn.appfolio.com/greyrockcommercial/images/a3abbe86-04a1-4e0c-a0ed-86e3eb4f90a1/medium.jpg",
+        "https://images.cdn.appfolio.com/greyrockcommercial/images/637a93c1-5626-4b3c-a1b6-a60ef711f1e3/medium.jpg",
+        "https://images.cdn.appfolio.com/greyrockcommercial/images/0631889f-9d35-4031-8de9-e7e695185d46/medium.jpg",
+        "https://images.cdn.appfolio.com/greyrockcommercial/images/18e70228-5c24-4f00-825d-edc2756dc49c/medium.jpg",
+        "https://images.cdn.appfolio.com/greyrockcommercial/images/8de7e22c-bbb9-4548-8fd7-7cf1475a9df5/medium.jpg",
+        "https://images.cdn.appfolio.com/greyrockcommercial/images/50d64590-6a3a-4d00-b5f9-bc4253a57dbe/medium.jpg"
+      ],
+      "detailUrl": "https://greyrockcommercial.appfolio.com/listings/detail/12cfc941-0500-4ecd-9d6c-028f85d622f0",
+      "applyUrl": "https://greyrockcommercial.appfolio.com/listings/rental_applications/new?listable_uid=12cfc941-0500-4ecd-9d6c-028f85d622f0&source=Website",
+      "lat": 35.409941891696675,
+      "lng": -80.58061695750966
+    },
     {
       "id": "d161cedc-a2fc-48ad-9fc9-fa567e08bd61",
       "title": "2300 S Cannon Blvd. - 2300 S Cannon Blvd., Kannapolis, NC 28083\n    MAP",
@@ -48,8 +80,8 @@
       ],
       "detailUrl": "https://greyrockcommercial.appfolio.com/listings/detail/d161cedc-a2fc-48ad-9fc9-fa567e08bd61",
       "applyUrl": "https://greyrockcommercial.appfolio.com/listings/rental_applications/new?listable_uid=d161cedc-a2fc-48ad-9fc9-fa567e08bd61&source=Website",
-      "lat": 35.48844985404051,
-      "lng": -80.62066829264896
+      "lat": 35.48870285754346,
+      "lng": -80.62326982560667
     },
     {
       "id": "75473018-bd95-4e11-9976-b673661e1fa2",
@@ -82,8 +114,8 @@
       ],
       "detailUrl": "https://greyrockcommercial.appfolio.com/listings/detail/75473018-bd95-4e11-9976-b673661e1fa2",
       "applyUrl": "https://greyrockcommercial.appfolio.com/listings/rental_applications/new?listable_uid=75473018-bd95-4e11-9976-b673661e1fa2&source=Website",
-      "lat": 35.58460427420406,
-      "lng": -80.8122860564777
+      "lat": 35.5869185685401,
+      "lng": -80.80761996862182
     },
     {
       "id": "a4c7f993-5d21-4f85-bc11-a05e9076ede2",
@@ -135,8 +167,8 @@
       ],
       "detailUrl": "https://greyrockcommercial.appfolio.com/listings/detail/a4c7f993-5d21-4f85-bc11-a05e9076ede2",
       "applyUrl": "https://greyrockcommercial.appfolio.com/listings/rental_applications/new?listable_uid=a4c7f993-5d21-4f85-bc11-a05e9076ede2&source=Website",
-      "lat": 35.58453117483498,
-      "lng": -80.81130535358956
+      "lat": 35.585564456923606,
+      "lng": -80.81000098485273
     }
   ]
 }
