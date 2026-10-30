@@ -1,13 +1,13 @@
 {
   "meta": {
-    "lastUpdated": "2026-10-30T16:52:24.131Z",
+    "lastUpdated": "2026-10-30T21:14:34.982Z",
     "source": "https://greyrockcommercial.appfolio.com/listings",
-    "listingCount": 4,
+    "listingCount": 3,
     "noVacancies": false,
     "previousCount": 4,
     "hasChanges": true,
-    "contentHash": "5qpfki",
-    "scrapeDurationMs": 5629,
+    "contentHash": "-ll2y5",
+    "scrapeDurationMs": 4508,
     "warnings": [],
     "version": "2.0.0"
   },
@@ -41,47 +41,8 @@
       ],
       "detailUrl": "https://greyrockcommercial.appfolio.com/listings/detail/12cfc941-0500-4ecd-9d6c-028f85d622f0",
       "applyUrl": "https://greyrockcommercial.appfolio.com/listings/rental_applications/new?listable_uid=12cfc941-0500-4ecd-9d6c-028f85d622f0&source=Website",
-      "lat": 35.407496313315576,
-      "lng": -80.57854618177726
-    },
-    {
-      "id": "d161cedc-a2fc-48ad-9fc9-fa567e08bd61",
-      "title": "2300 S Cannon Blvd. - 2300 S Cannon Blvd., Kannapolis, NC 28083\n    MAP",
-      "address": "2300 S Cannon Blvd. - 2300 S Cannon Blvd., Kannapolis, NC 28083",
-      "city": "Kannapolis",
-      "type": "Commercial",
-      "leaseType": "Gross",
-      "rent": 3500,
-      "sqft": 2070,
-      "rentPerSF": null,
-      "description": "Come see this great opportunity for a commercial space on a busy road in Kannapolis. Previously a Chinese food restaurant, this space would be perfect for a new restaurant. This is a great location on a corner lot with a large parking lot and sits on Highway 29 close to I-85.\n\nProperty Highlights:\n\n-±2000 SF retail commercial space\n-Prominent Highway 29 frontage with excellent signage visibility\n-Consistent local traffic\n-Rear kitchen area perfect for a restaurant\n-Two restrooms\n-Brand new TPO Roof just installed\n\nFor additional information or to schedule a private tour, please contact GreyRock Commercial Real Estate at (704)707-4656.\n\nRental Terms\nRent: $3,5000\nLease Type: Gross\nApplication Fee: $120\nAvailable Now",
-      "available": "Now",
-      "status": "available",
-      "utilities": null,
-      "imageUrl": "https://images.cdn.appfolio.com/greyrockcommercial/images/6b301cc0-de33-42ab-823a-54f16380fc6c/medium.jpg",
-      "imageUrls": [
-        "https://images.cdn.appfolio.com/greyrockcommercial/images/6b301cc0-de33-42ab-823a-54f16380fc6c/medium.jpg",
-        "https://images.cdn.appfolio.com/greyrockcommercial/images/aa6e0e2d-7b70-4f40-974e-149911119b14/medium.jpg",
-        "https://images.cdn.appfolio.com/greyrockcommercial/images/a044660a-9056-43c3-8f32-fa0950ea121d/medium.jpg",
-        "https://images.cdn.appfolio.com/greyrockcommercial/images/78742c63-c92b-4e83-8813-8724da28b27e/medium.jpg",
-        "https://images.cdn.appfolio.com/greyrockcommercial/images/44f44b1b-d93a-41aa-bbb8-92f24143cb71/medium.jpg",
-        "https://images.cdn.appfolio.com/greyrockcommercial/images/6e61759c-5c26-421e-b5e8-a54a334783f7/medium.jpg",
-        "https://images.cdn.appfolio.com/greyrockcommercial/images/0a3f5e2d-99ea-4240-9f59-88f8b8700f37/medium.jpg",
-        "https://images.cdn.appfolio.com/greyrockcommercial/images/46f42517-7648-415e-bed3-1a0138c1d164/medium.jpg",
-        "https://images.cdn.appfolio.com/greyrockcommercial/images/bd192e27-47e4-479d-a1e6-a1ff5ab6d181/medium.jpg",
-        "https://images.cdn.appfolio.com/greyrockcommercial/images/cff7b04c-70df-43cd-ae82-bf24a079c934/medium.jpg",
-        "https://images.cdn.appfolio.com/greyrockcommercial/images/02d227b6-ac35-4cf7-af3e-d18409dd9a78/medium.jpg",
-        "https://images.cdn.appfolio.com/greyrockcommercial/images/ba2aea5a-b07e-4087-8083-5609686e93d5/medium.jpg",
-        "https://images.cdn.appfolio.com/greyrockcommercial/images/9b955da6-9e97-4891-9501-8c1523013069/medium.jpg",
-        "https://images.cdn.appfolio.com/greyrockcommercial/images/4bf761a4-bc87-4f43-a95b-ba0264a2bc6b/medium.jpg",
-        "https://images.cdn.appfolio.com/greyrockcommercial/images/31a0071f-5044-4822-80e9-775be5c05646/medium.jpg",
-        "https://images.cdn.appfolio.com/greyrockcommercial/images/1982c64a-8eae-4ce5-bb47-ba363a4ac6cd/medium.jpg",
-        "https://images.cdn.appfolio.com/greyrockcommercial/images/eb4847c1-1622-4687-b9b4-62876d822ce0/medium.jpg"
-      ],
-      "detailUrl": "https://greyrockcommercial.appfolio.com/listings/detail/d161cedc-a2fc-48ad-9fc9-fa567e08bd61",
-      "applyUrl": "https://greyrockcommercial.appfolio.com/listings/rental_applications/new?listable_uid=d161cedc-a2fc-48ad-9fc9-fa567e08bd61&source=Website",
-      "lat": 35.48731539058799,
-      "lng": -80.6210026337568
+      "lat": 35.41028394816241,
+      "lng": -80.57976401821476
     },
     {
       "id": "75473018-bd95-4e11-9976-b673661e1fa2",
@@ -114,8 +75,8 @@
       ],
       "detailUrl": "https://greyrockcommercial.appfolio.com/listings/detail/75473018-bd95-4e11-9976-b673661e1fa2",
       "applyUrl": "https://greyrockcommercial.appfolio.com/listings/rental_applications/new?listable_uid=75473018-bd95-4e11-9976-b673661e1fa2&source=Website",
-      "lat": 35.58360254808467,
-      "lng": -80.80961155660874
+      "lat": 35.58597062343349,
+      "lng": -80.8115657485849
     },
     {
       "id": "a4c7f993-5d21-4f85-bc11-a05e9076ede2",
@@ -167,8 +128,8 @@
       ],
       "detailUrl": "https://greyrockcommercial.appfolio.com/listings/detail/a4c7f993-5d21-4f85-bc11-a05e9076ede2",
       "applyUrl": "https://greyrockcommercial.appfolio.com/listings/rental_applications/new?listable_uid=a4c7f993-5d21-4f85-bc11-a05e9076ede2&source=Website",
-      "lat": 35.584755677997805,
-      "lng": -80.80863575875192
+      "lat": 35.585530818685534,
+      "lng": -80.81095008516732
     }
   ]
 }
