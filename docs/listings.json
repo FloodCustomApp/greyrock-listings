@@ -1,13 +1,13 @@
 {
   "meta": {
-    "lastUpdated": "2026-11-01T20:56:53.027Z",
+    "lastUpdated": "2026-11-02T00:10:21.246Z",
     "source": "https://greyrockcommercial.appfolio.com/listings",
     "listingCount": 3,
     "noVacancies": false,
     "previousCount": 3,
     "hasChanges": true,
-    "contentHash": "-sxuo31",
-    "scrapeDurationMs": 3882,
+    "contentHash": "llb64t",
+    "scrapeDurationMs": 4411,
     "warnings": [],
     "version": "2.0.0"
   },
@@ -23,8 +23,8 @@
       "sqft": 2682,
       "rentPerSF": 13.4,
       "description": "Industrial / Flex Space for Lease – Prime Concord Location\n\n2035 Wilshire Court SW | Concord, NC 28025\n\nExcellent opportunity to lease a versatile 2,682 SF industrial/flex property situated on approximately 0.77 acres in an established Concord industrial area.\n\nPreviously occupied by a hydraulic and machinery repair business, this property offers a functional layout ideal for automotive-related services, equipment repair, contractors, light manufacturing, warehousing, and other permitted industrial uses.\n\nThe building features a spacious open workshop with three overhead garage doors, a customer reception/waiting area, two office spaces, and a bathroom. The property also offers a generous paved area for parking, vehicle access, and maneuverability.\n\nConveniently located near Highway 601, US-29, and the I-85 corridor, providing accessibility throughout Concord, Cabarrus County, and the greater Charlotte region.\n\nProperty Highlights:\n\n-2,682 SF industrial/flex building\n-Approximately 0.77-acre parcel\n-I-1 industrial zoning\n-Three overhead garage doors\n-Large open workshop/warehouse area\n-Reception/waiting area and two offices\n-One bathroom\n-Paved parking and vehicle maneuvering area\n-Steel-frame construction\n-Convenient access to major transportation corridors\n\nRental Terms\n\n-Monthly Rent: $2,995\n-Lease Type: Modified Gross\n-Application Fee: $120\n\nAvailable: November 1, 2026\n\nFor additional information or to schedule a private tour, contact GreyRock Commercial Real Estate at (704) 707-4656.\n\nAll proposed uses are subject to applicable zoning requirements and landlord approval.",
-      "available": "11/2/26",
-      "status": "coming-soon",
+      "available": "Now",
+      "status": "available",
       "utilities": null,
       "imageUrl": "https://images.cdn.appfolio.com/greyrockcommercial/images/d6b8ca17-b8fa-46d0-9289-ac9bdb9c9d94/medium.jpg",
       "imageUrls": [
@@ -41,8 +41,8 @@
       ],
       "detailUrl": "https://greyrockcommercial.appfolio.com/listings/detail/12cfc941-0500-4ecd-9d6c-028f85d622f0",
       "applyUrl": "https://greyrockcommercial.appfolio.com/listings/rental_applications/new?listable_uid=12cfc941-0500-4ecd-9d6c-028f85d622f0&source=Website",
-      "lat": 35.40675757411666,
-      "lng": -80.58076347652165
+      "lat": 35.41039487301364,
+      "lng": -80.57978344387148
     },
     {
       "id": "75473018-bd95-4e11-9976-b673661e1fa2",
@@ -75,8 +75,8 @@
       ],
       "detailUrl": "https://greyrockcommercial.appfolio.com/listings/detail/75473018-bd95-4e11-9976-b673661e1fa2",
       "applyUrl": "https://greyrockcommercial.appfolio.com/listings/rental_applications/new?listable_uid=75473018-bd95-4e11-9976-b673661e1fa2&source=Website",
-      "lat": 35.58346703109692,
-      "lng": -80.81178019942918
+      "lat": 35.585525570418376,
+      "lng": -80.81190920842536
     },
     {
       "id": "a4c7f993-5d21-4f85-bc11-a05e9076ede2",
@@ -128,8 +128,8 @@
       ],
       "detailUrl": "https://greyrockcommercial.appfolio.com/listings/detail/a4c7f993-5d21-4f85-bc11-a05e9076ede2",
       "applyUrl": "https://greyrockcommercial.appfolio.com/listings/rental_applications/new?listable_uid=a4c7f993-5d21-4f85-bc11-a05e9076ede2&source=Website",
-      "lat": 35.585452332706566,
-      "lng": -80.81150393462585
+      "lat": 35.58507214062515,
+      "lng": -80.81065288327801
     }
   ]
 }
