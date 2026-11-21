@@ -1,17 +1,45 @@
 {
   "meta": {
-    "lastUpdated": "2026-11-20T18:54:49.122Z",
+    "lastUpdated": "2026-11-21T00:29:53.969Z",
     "source": "https://greyrockcommercial.appfolio.com/listings",
-    "listingCount": 3,
+    "listingCount": 4,
     "noVacancies": false,
     "previousCount": 3,
     "hasChanges": true,
-    "contentHash": "-nnu19t",
-    "scrapeDurationMs": 4060,
+    "contentHash": "1hyhsu",
+    "scrapeDurationMs": 6012,
     "warnings": [],
     "version": "2.0.0"
   },
   "listings": [
+    {
+      "id": "095f91bb-0eef-4204-bf84-1642382604af",
+      "title": "354 Union Cemetery Rd. SW, Concord, NC 28027\n    MAP",
+      "address": "354 Union Cemetery Rd. SW, Concord, NC 28027",
+      "city": "Concord",
+      "type": "Commercial",
+      "leaseType": "Modified",
+      "rent": 3295,
+      "sqft": 2088,
+      "rentPerSF": 18.94,
+      "description": "Excellent opportunity to lease a versatile 2,088 SF industrial/flex property situated in a prime Concord Location close to Hwy 29, Hwy 49 and Hwy 601. \n\nThis property is perfect for an industrial business or a freestanding retail company with a combination of office, storage, and workshop space.\n\nThe building features a spacious entrance room with an open office area, workshop with two overhead garage doors, two bathrooms and an enclosed office room. The property it perfectly situated for good visibility and in a high demand commercial area. \n\nConveniently located near Highway 601, US-29, and the I-85 corridor, providing accessibility throughout Concord, Cabarrus County, and the greater Charlotte region.\n\nProperty Highlights:\n\n-2,088 SF industrial/flex building\n-Two overhead garage doors\n-Large open workshop/warehouse area\n-Reception/waiting area and one private office\n-Two bathrooms\n-Paved parking and vehicle maneuvering area\n-Convenient access to major transportation corridors\n\nRental Terms\n\n-Monthly Rent: $3,295\n-Lease Type: Modified Gross\n-Application Fee: $120\n\nAvailable: January 1, 2027\n\nFor additional information or to schedule a private tour, contact GreyRock Commercial Real Estate at (704) 707-4656.",
+      "available": "1/1/27",
+      "status": "coming-soon",
+      "utilities": null,
+      "imageUrl": "https://images.cdn.appfolio.com/greyrockcommercial/images/a4c35f7d-964e-4fab-b053-1613df74b309/medium.jpg",
+      "imageUrls": [
+        "https://images.cdn.appfolio.com/greyrockcommercial/images/a4c35f7d-964e-4fab-b053-1613df74b309/medium.jpg",
+        "https://images.cdn.appfolio.com/greyrockcommercial/images/c67e853b-d5a0-4708-9a1e-1b2053a7e410/medium.jpg",
+        "https://images.cdn.appfolio.com/greyrockcommercial/images/3b14b8bb-2333-4cb0-b53e-1ba9004df9f1/medium.jpg",
+        "https://images.cdn.appfolio.com/greyrockcommercial/images/ce92530f-fcaa-4eda-b35d-032c6414b505/medium.jpg",
+        "https://images.cdn.appfolio.com/greyrockcommercial/images/89a33791-74d9-49be-ba65-0334c9052066/medium.jpg",
+        "https://images.cdn.appfolio.com/greyrockcommercial/images/07f870d1-887b-41ec-bd7d-f1fde6c16999/medium.jpg"
+      ],
+      "detailUrl": "https://greyrockcommercial.appfolio.com/listings/detail/095f91bb-0eef-4204-bf84-1642382604af",
+      "applyUrl": "https://greyrockcommercial.appfolio.com/listings/rental_applications/new?listable_uid=095f91bb-0eef-4204-bf84-1642382604af&source=Website",
+      "lat": 35.40716111870734,
+      "lng": -80.58005317650262
+    },
     {
       "id": "12cfc941-0500-4ecd-9d6c-028f85d622f0",
       "title": "2035 Wilshire Ct SW, Concord, NC 28025\n    MAP",
@@ -41,8 +69,8 @@
       ],
       "detailUrl": "https://greyrockcommercial.appfolio.com/listings/detail/12cfc941-0500-4ecd-9d6c-028f85d622f0",
       "applyUrl": "https://greyrockcommercial.appfolio.com/listings/rental_applications/new?listable_uid=12cfc941-0500-4ecd-9d6c-028f85d622f0&source=Website",
-      "lat": 35.41008402205039,
-      "lng": -80.58119055612083
+      "lat": 35.4069592437217,
+      "lng": -80.58050936290284
     },
     {
       "id": "75473018-bd95-4e11-9976-b673661e1fa2",
@@ -75,8 +103,8 @@
       ],
       "detailUrl": "https://greyrockcommercial.appfolio.com/listings/detail/75473018-bd95-4e11-9976-b673661e1fa2",
       "applyUrl": "https://greyrockcommercial.appfolio.com/listings/rental_applications/new?listable_uid=75473018-bd95-4e11-9976-b673661e1fa2&source=Website",
-      "lat": 35.58495791808066,
-      "lng": -80.80933498150735
+      "lat": 35.58479618068384,
+      "lng": -80.81049159395486
     },
     {
       "id": "a4c7f993-5d21-4f85-bc11-a05e9076ede2",
@@ -128,8 +156,8 @@
       ],
       "detailUrl": "https://greyrockcommercial.appfolio.com/listings/detail/a4c7f993-5d21-4f85-bc11-a05e9076ede2",
       "applyUrl": "https://greyrockcommercial.appfolio.com/listings/rental_applications/new?listable_uid=a4c7f993-5d21-4f85-bc11-a05e9076ede2&source=Website",
-      "lat": 35.58346880728946,
-      "lng": -80.8109655090578
+      "lat": 35.58334243355354,
+      "lng": -80.81216550818507
     }
   ]
 }
